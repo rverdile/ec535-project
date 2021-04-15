@@ -13,7 +13,7 @@ Game::Game(QWidget *parent)
 
     // Create centipede
     centipede = new Centipede();
-    scene->addItem(centipede);
+    centipede->addToScene(scene);
 
     show();
 }
