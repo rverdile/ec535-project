@@ -3,8 +3,16 @@
 
 #include <QGraphicsRectItem>
 #include <QGraphicsScene>
+#include <QGraphicsPixmapItem>
 #include <QObject>
 #include <vector>
+
+class Centipede_Segment : public QGraphicsPixmapItem{
+
+public:
+    Centipede_Segment(bool);
+};
+
 
 class Centipede : public QObject {
     Q_OBJECT
@@ -19,8 +27,9 @@ private:
     int turning;      // How many segments have been turned if turning
     int length;
     bool stop;
-    std::vector<QGraphicsRectItem *> segments;
+    std::vector<Centipede_Segment *> segments;
 };
+
 
 #endif // CENTIPEDE_H
 

@@ -10,6 +10,7 @@ Game::Game(QWidget *parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(800,600);
+    scene->setBackgroundBrush(Qt::black);
 
     // Create centipede
     centipede = new Centipede();
@@ -21,6 +22,7 @@ Game::Game(QWidget *parent)
 Game::~Game()
 {
     delete centipede;
+    delete scene;
 }
 
 
