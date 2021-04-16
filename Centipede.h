@@ -11,9 +11,9 @@
 class Centipede_Segment : public QGraphicsPixmapItem{
 
 public:
-    Centipede_Segment(bool);
+    Centipede_Segment(bool, bool);
     bool is_shot();
-    void convert_to_head();
+    void set_head(bool direction);
 };
 
 // Class for a single centipede

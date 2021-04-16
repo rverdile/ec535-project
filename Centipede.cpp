@@ -21,9 +21,9 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction)
 
         Centipede_Segment *segment;
         if (i == length - 1)
-           segment = new Centipede_Segment(false);
+           segment = new Centipede_Segment(false, direction);
         else
-           segment = new Centipede_Segment(true);
+           segment = new Centipede_Segment(true, direction);
 
         // Starting position depends on direction
         if (direction)
@@ -54,8 +54,6 @@ Centipede::~Centipede()
 
 // Add all centipede segments to scene
 void Centipede::addToScene(QGraphicsScene * scene) {
-    qDebug() << "Length: " << length;
-    qDebug() << scene;
     for (int i = 0; i < length; i++) {
         scene->addItem(segments[i]);
     }
@@ -91,10 +89,12 @@ void Centipede::move()
                 else {
                     turning = length - 2;
                     segment->setPos(segment->x(), segment->y()+25);
+                    segment->set_head(!direction);
 
                     // If length is 1, turning is complete
-                    if (turning == -1)
+                    if (turning == -1) {
                         direction = false;
+                    }
                 }
             }
             else {
@@ -137,10 +137,12 @@ void Centipede::move()
                     turning = length - 2;
                     turned = true;
                     segment->setPos(segment->x(), segment->y()+25);
+                    segment->set_head(!direction);
 
                     // If length is 1, turning is complete
-                    if (turning == -1)
+                    if (turning == -1) {
                         direction = true;
+                    }
                 }
             }
             else {
@@ -183,12 +185,16 @@ void Centipede::move()
 // Create centipede segment
 // section=true -> body segment
 // section=false -> head segment
-Centipede_Segment::Centipede_Segment(bool section)
+Centipede_Segment::Centipede_Segment(bool section, bool direction)
 {
     if (section)
         setPixmap(QPixmap(":/images/images/body.jpg"));
-    else
-        setPixmap(QPixmap(":/images/images/head.jpg"));
+    else {
+        if (direction)
+            setPixmap(QPixmap(":/images/images/head.jpg"));
+        else
+            setPixmap(QPixmap(":/images/images/head_rev.jpg"));
+    }
 }
 
 
@@ -205,10 +211,13 @@ bool Centipede_Segment::is_shot()
 }
 
 
-// Convert a body segment to a head segment
-void Centipede_Segment::convert_to_head()
+// Set segment as a head
+void Centipede_Segment::set_head(bool direction)
 {
-    setPixmap(QPixmap(":/images/images/head.jpg"));
+    if (direction)
+        setPixmap(QPixmap(":/images/images/head.jpg"));
+    else
+        setPixmap(QPixmap(":/images/images/head_rev.jpg"));
 }
 
 
@@ -266,7 +275,7 @@ void Centipedes::collision_check()
                 else if (j == length - 1) {
                     scene->removeItem(centipedes[i]->segments[j]);
                     centipedes[i]->segments.pop_back();
-                    centipedes[i]->segments.back()->convert_to_head();
+                    centipedes[i]->segments.back()->set_head(centipedes[i]->direction);
                     centipedes[i]->length-=1;
                 }
 
