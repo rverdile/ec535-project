@@ -17,11 +17,15 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction)
 
         Centipede_Segment *segment;
         if (i == length - 1)
-            segment = new Centipede_Segment(false);
+           segment = new Centipede_Segment(false);
         else
-            segment = new Centipede_Segment(true);
+           segment = new Centipede_Segment(true);
 
-        segment->setPos(x+25*i,y);
+        if (direction)
+            segment->setPos(x+25*i,y);
+        else
+            segment->setPos(x-25*i,y);
+
         segments.push_back(segment);
     }
 
@@ -272,8 +276,10 @@ void Centipedes::collision_check()
                     deleting.push_back(i);
 
                     qDebug() << "Creating centipede size: " << j;
+                    Centipede *new_cent;
                     // Create new centipedes
-                    Centipede *new_cent = new Centipede(j, centipedes[i]->segments.front()->x(), centipedes[i]->segments.front()->y(), 110, centipedes[i]->direction);
+
+                    new_cent = new Centipede(j, centipedes[i]->segments.front()->x(), centipedes[i]->segments.front()->y(), 110, centipedes[i]->direction);
                     centipedes.push_back(new_cent);
                     new_cent->addToScene(scene);
 
