@@ -29,6 +29,9 @@ void Dart::move()
     for (int i = 0, n = colliding_items.size(); i < n; i++) {
         if (typeid(*(colliding_items[i])) == typeid (Centipede_Segment)) {
 
+            // Tell centipedes that there's been a collision
+            emit collision();
+
             // Remove dart if it collides with centipede
             scene()->removeItem(this);
             delete this;

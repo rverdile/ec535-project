@@ -17,7 +17,7 @@ Game::Game(QWidget *parent)
     centipedes = new Centipedes(scene);
 
     // Create blaster
-    blaster = new Blaster();
+    blaster = new Blaster(centipedes);
     blaster->setFlag(QGraphicsItem::ItemIsFocusable);
     blaster->setFocus();
     scene->addItem(blaster);
