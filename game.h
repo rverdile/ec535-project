@@ -19,7 +19,7 @@ public:
     ~Game();
 private:
     QGraphicsScene * scene;
-    Centipede *centipede;
+    Centipedes *centipedes;
     Blaster *blaster;
 
 signals:

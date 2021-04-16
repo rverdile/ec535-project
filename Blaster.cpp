@@ -6,7 +6,7 @@
 
 Blaster::Blaster()
 {
-    setPixmap(QPixmap(":/images/blaster.png"));
+    setPixmap(QPixmap(":/images/images/blaster.png"));
 }
 
 void Blaster::keyPressEvent(QKeyEvent *event)

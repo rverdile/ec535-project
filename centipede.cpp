@@ -6,10 +6,10 @@
 
 // Constructor
 // Create a centipede and start movement timer
-Centipede::Centipede()
+Centipede::Centipede(int len, int x, int y, int speed)
 {
     // Create centipede
-    length = 10;
+    length = len;
     for (int i = 0; i < length; i++) {
 
         Centipede_Segment *segment;
@@ -18,7 +18,7 @@ Centipede::Centipede()
         else
             segment = new Centipede_Segment(true);
 
-        segment->setPos(0+25*i,100);
+        segment->setPos(x+25*i,y);
         segments.push_back(segment);
     }
 
@@ -27,14 +27,21 @@ Centipede::Centipede()
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 
     // Start timer
-    timer->start(150);
+    timer->start(speed);
 
     // Centipede direction is initially right
     direction = true;
     turning = -1;
-    stop = false;
 
     qDebug() << "Starting centipede";
+}
+
+Centipede::~Centipede()
+{
+    for (int i = length - 1; i >= 0; i--) {
+        delete segments.back();
+        segments.pop_back();
+    }
 }
 
 // Add all centipede segments to scene
@@ -91,7 +98,6 @@ void Centipede::move()
 
                     // Done turning, mark direction change
                     if (turning == -1) {
-                        qDebug() << "Done turning";
                         direction = false;
                     }
                 }
@@ -156,7 +162,30 @@ void Centipede::move()
 Centipede_Segment::Centipede_Segment(bool section)
 {
     if (section)
-        setPixmap(QPixmap(":/images/body.jpg"));
+        setPixmap(QPixmap(":/images/images/body.jpg"));
     else
-        setPixmap(QPixmap(":/images/head.jpg"));
+        setPixmap(QPixmap(":/images/images/head.jpg"));
+}
+
+// Centipedes constructor
+// Game starts with 1 centipede, length 12, top of screen
+Centipedes::Centipedes(QGraphicsScene *scene)
+{
+    // Start a single centipede
+    Centipede *centipede = new Centipede(12, 0, 100, 150);
+    centipedes.push_back(centipede);
+    centipede->addToScene(scene);
+
+    centipede = new Centipede(12, 25, 200, 50);
+    centipedes.push_back(centipede);
+    centipede->addToScene(scene);
+}
+
+Centipedes::~Centipedes()
+{
+    int length = centipedes.size();
+    for (int i = length - 1; i >= 0; i--) {
+        delete centipedes.back();
+        centipedes.pop_back();
+    }
 }

@@ -8,7 +8,7 @@
 Dart::Dart()
 {
     // draw the rect
-    setPixmap(QPixmap(":/images/dart.png"));
+    setPixmap(QPixmap(":/images/images/dart.png"));
 
     // connect
     QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
