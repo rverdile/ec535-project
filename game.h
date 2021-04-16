@@ -2,10 +2,14 @@
 #define GAME_H
 
 #include <QWidget>
-#include "centipede.h"
 #include <QGraphicsView>
 #include <QWidget>
 #include <QGraphicsScene>
+#include "centipede.h"
+#include "Blaster.h"
+
+#define SCENE_W 800;
+#define SCENE_H 600;
 
 class Game : public QGraphicsView
 {
@@ -16,6 +20,7 @@ public:
 private:
     QGraphicsScene * scene;
     Centipede *centipede;
+    Blaster *blaster;
 
 signals:
 

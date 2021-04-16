@@ -2,5 +2,7 @@
     <qresource prefix="/images">
         <file>head.jpg</file>
         <file>body.jpg</file>
+        <file>blaster.png</file>
+        <file>dart.png</file>
     </qresource>
 </RCC>
