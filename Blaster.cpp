@@ -4,9 +4,10 @@
 #include "Blaster.h"
 #include "Dart.h"
 
-Blaster::Blaster()
+Blaster::Blaster(Centipedes * centipedes)
 {
-    setPixmap(QPixmap(":/images/blaster.png"));
+    this->centipedes = centipedes;
+    setPixmap(QPixmap(":/images/images/blaster.png"));
 }
 
 void Blaster::keyPressEvent(QKeyEvent *event)
@@ -43,6 +44,7 @@ void Blaster::keyPressEvent(QKeyEvent *event)
     {
         //create a dart
         Dart * dart = new Dart();
+        QObject::connect(dart, &Dart::collision, centipedes, &Centipedes::collision_check);
         dart->setPos(x(),y());
         scene()->addItem(dart);
     }

@@ -3,6 +3,7 @@
         <file>images/blaster.png</file>
         <file>images/body.jpg</file>
         <file>images/dart.png</file>
+        <file>images/head_rev.jpg</file>
         <file>images/head.jpg</file>
     </qresource>
 </RCC>

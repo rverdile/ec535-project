@@ -1,5 +1,5 @@
 #include "mainwindow.h"
-#include "game.h"
+#include "Game.h"
 #include <QGraphicsScene>
 #include <QGraphicsRectItem>
 #include <QGraphicsView>

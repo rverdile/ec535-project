@@ -2,7 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "game.h"
+#include "Game.h"
 
 class MainWindow : public QMainWindow
 {

@@ -1,5 +1,5 @@
-#include "game.h"
-#include "centipede.h"
+#include "Game.h"
+#include "Centipede.h"
 #include "Blaster.h"
 
 Game::Game(QWidget *parent)
@@ -11,27 +11,24 @@ Game::Game(QWidget *parent)
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(800,600);
-    scene->setBackgroundBrush(Qt::white);
+    scene->setBackgroundBrush(Qt::black);
 
     // Create centipede
-    centipede = new Centipede();
-    centipede->addToScene(scene);
+    centipedes = new Centipedes(scene);
 
     // Create blaster
-    blaster = new Blaster();
+    blaster = new Blaster(centipedes);
     blaster->setFlag(QGraphicsItem::ItemIsFocusable);
     blaster->setFocus();
     scene->addItem(blaster);
     blaster->setPos(400,500);
-
-
 
     show();
 }
 
 Game::~Game()
 {
-    delete centipede;
+    delete centipedes;
     delete blaster;
     delete scene;
 }
