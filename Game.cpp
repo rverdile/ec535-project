@@ -1,5 +1,5 @@
-#include "game.h"
-#include "centipede.h"
+#include "Game.h"
+#include "Centipede.h"
 #include "Blaster.h"
 
 Game::Game(QWidget *parent)

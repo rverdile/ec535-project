@@ -10,17 +10,17 @@ CONFIG += c++11
 
 SOURCES += \
     Blaster.cpp \
+    Centipede.cpp \
     Dart.cpp \
-    centipede.cpp \
-    game.cpp \
+    Game.cpp \
     main.cpp \
     mainwindow.cpp
 
 HEADERS += \
     Blaster.h \
+    Centipede.h \
     Dart.h \
-    centipede.h \
-    game.h \
+    Game.h \
     mainwindow.h
 
 # Default rules for deployment.

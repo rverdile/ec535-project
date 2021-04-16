@@ -1,15 +1,18 @@
-#include "centipede.h"
+#include "Centipede.h"
+#include "Dart.h"
 #include <QTimer>
 #include <QGraphicsRectItem>
+#include <QList>
 
 #include <QDebug>
 
 // Constructor
 // Create a centipede and start movement timer
-Centipede::Centipede(int len, int x, int y, int speed)
+Centipede::Centipede(int len, int x, int y, int speed, bool direction)
 {
     // Create centipede
     length = len;
+    this->direction = direction;
     for (int i = 0; i < length; i++) {
 
         Centipede_Segment *segment;
@@ -39,13 +42,14 @@ Centipede::Centipede(int len, int x, int y, int speed)
 Centipede::~Centipede()
 {
     for (int i = length - 1; i >= 0; i--) {
-        delete segments.back();
         segments.pop_back();
     }
 }
 
 // Add all centipede segments to scene
 void Centipede::addToScene(QGraphicsScene * scene) {
+    qDebug() << "Length: " << length;
+    qDebug() << scene;
     for (int i = 0; i < length; i++) {
         scene->addItem(segments[i]);
     }
@@ -53,7 +57,8 @@ void Centipede::addToScene(QGraphicsScene * scene) {
 
 // Move the centipede
 void Centipede::move()
-{
+{    
+
     bool turned = false;
 
     // Moving right
@@ -80,6 +85,10 @@ void Centipede::move()
                 else {
                     turning = length - 2;
                     segment->setPos(segment->x(), segment->y()+25);
+
+                    // If length is 1, turning is complete
+                    if (turning == -1)
+                        direction = false;
                 }
             }
             else {
@@ -122,6 +131,10 @@ void Centipede::move()
                     turning = length - 2;
                     turned = true;
                     segment->setPos(segment->x(), segment->y()+25);
+
+                    // If length is 1, turning is complete
+                    if (turning == -1)
+                        direction = true;
                 }
             }
             else {
@@ -167,18 +180,42 @@ Centipede_Segment::Centipede_Segment(bool section)
         setPixmap(QPixmap(":/images/images/head.jpg"));
 }
 
+
+
+bool Centipede_Segment::is_shot()
+{
+    QList<QGraphicsItem *> colliding_items = collidingItems();
+    for (int i = 0, n = colliding_items.size(); i < n; i++) {
+        if (typeid(*(colliding_items[i])) == typeid (Dart)) {
+            return true;
+        }
+    }
+    return false;
+}
+
+void Centipede_Segment::convert_to_head()
+{
+    setPixmap(QPixmap(":/images/images/head.jpg"));
+}
+
 // Centipedes constructor
 // Game starts with 1 centipede, length 12, top of screen
 Centipedes::Centipedes(QGraphicsScene *scene)
 {
     // Start a single centipede
-    Centipede *centipede = new Centipede(12, 0, 100, 150);
+    Centipede *centipede = new Centipede(12, 0, 100, 150, true);
     centipedes.push_back(centipede);
     centipede->addToScene(scene);
 
-    centipede = new Centipede(12, 25, 200, 50);
-    centipedes.push_back(centipede);
-    centipede->addToScene(scene);
+    this->scene = scene;
+
+    // Start time to check for collisions
+    // Connect to timer
+    QTimer * timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(collision_check()));
+
+    // Start timer
+    timer->start(20);
 }
 
 Centipedes::~Centipedes()
@@ -187,5 +224,79 @@ Centipedes::~Centipedes()
     for (int i = length - 1; i >= 0; i--) {
         delete centipedes.back();
         centipedes.pop_back();
+    }
+}
+
+void Centipedes::collision_check()
+{
+    std::vector<int> deleting;
+    for (int i = 0; i < int(centipedes.size()); i++) {
+        for (int j = 0; j < int(centipedes[i]->segments.size()); j++) {
+            // Handle collision with dart
+            if (centipedes[i]->segments[j]->is_shot()) {
+
+                // Get length of centipede
+                int length = centipedes[i]->segments.size();
+
+                qDebug() << "Initial centipede length: " << length;
+                qDebug()<<"Segment hit: " << j;
+
+                //TO-DO: turn segments into mushrooms instead of deleting them
+
+                // If there is only one segment in centipede, delete centipede
+                if (length == 1) {
+                    deleting.push_back(i);
+                }
+
+                // If this segment is the head, delete the segment
+                // and convert first body segment into head
+                else if (j == length - 1) {
+                    scene->removeItem(centipedes[i]->segments[j]);
+                    centipedes[i]->segments.pop_back();
+                    centipedes[i]->segments.back()->convert_to_head();
+                    centipedes[i]->length-=1;
+                }
+
+                // If this segment is the tail, delete the segment
+                else if (j == 0) {
+                    scene->removeItem(centipedes[i]->segments[j]);
+                    centipedes[i]->segments.erase(centipedes[i]->segments.begin());
+                    centipedes[i]->length-=1;
+                }
+
+                // If this segment is in the middle of the centipede,
+                // delete the segment and separate the centipede into two
+                else {
+
+                    // Mark centipede for deletion
+                    deleting.push_back(i);
+
+                    qDebug() << "Creating centipede size: " << j;
+                    // Create new centipedes
+                    Centipede *new_cent = new Centipede(j, centipedes[i]->segments.front()->x(), centipedes[i]->segments.front()->y(), 110, centipedes[i]->direction);
+                    centipedes.push_back(new_cent);
+                    new_cent->addToScene(scene);
+
+                    qDebug() << "Creating centipede size: " << length - j - 1;
+                    new_cent = new Centipede(length - j - 1, centipedes[i]->segments[j+1]->x(), centipedes[i]->segments[j+1]->y(), 110, centipedes[i]->direction);
+                    centipedes.push_back(new_cent);
+                    new_cent->addToScene(scene);
+                }
+
+                break;
+
+            }
+        }
+    }
+
+    // For any scenes marked for deletiong, remove from scene
+    // and delete from centipedes vector
+    for (int i = 0; i < int(deleting.size()); i++) {
+        Centipede * temp = centipedes[deleting[i]];
+        for (int j = 0; j < int(temp->segments.size()); j++) {
+            scene->removeItem(temp->segments[j]);
+        }
+        centipedes.erase(centipedes.begin()+deleting[i]);
+        delete temp;
     }
 }
