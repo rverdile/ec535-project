@@ -13,6 +13,7 @@ SOURCES += \
     Centipede.cpp \
     Dart.cpp \
     Game.cpp \
+    Mushroom.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -21,6 +22,7 @@ HEADERS += \
     Centipede.h \
     Dart.h \
     Game.h \
+    Mushroom.h \
     mainwindow.h
 
 # Default rules for deployment.

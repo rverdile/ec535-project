@@ -5,5 +5,9 @@
         <file>images/dart.png</file>
         <file>images/head_rev.jpg</file>
         <file>images/head.jpg</file>
+        <file>images/mushroom_4hp.png</file>
+        <file>images/mushroom_3hp.png</file>
+        <file>images/mushroom_2hp.png</file>
+        <file>images/mushroom_1hp.png</file>
     </qresource>
 </RCC>

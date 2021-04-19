@@ -4,8 +4,11 @@
 #include "Dart.h"
 #include "Game.h"
 #include "Centipede.h"
+#include "Mushroom.h"
 
 #include <QDebug>
+
+extern Game * game;
 
 Dart::Dart()
 {
@@ -33,6 +36,15 @@ void Dart::move()
             emit collision();
 
             // Remove dart if it collides with centipede
+            scene()->removeItem(this);
+            delete this;
+            return;
+        }
+
+        if (typeid(*(colliding_items[i])) == typeid (Mushroom)) {
+
+            emit mushroomCollision();
+
             scene()->removeItem(this);
             delete this;
             return;
