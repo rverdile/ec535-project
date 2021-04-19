@@ -31,13 +31,15 @@ public:
     std::vector<Centipede_Segment *> segments;
     bool direction;   // Direction of centipede movement; true=right, false=left
     int length;
+    int speed;
     void start(int speed);
+    void update_speed(int speed);
 public slots:
     void move();
 private:
-    int turning;      // How many segments have been turned if turning
     MushroomField *mushroom_field;
     bool mushroom_collision(Centipede_Segment *segment);
+    QTimer * timer;
 };
 
 

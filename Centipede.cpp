@@ -16,6 +16,7 @@ int counter = 0;
 Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomField *mushroom_field)
 {
     this->mushroom_field = mushroom_field;
+    this->speed = speed;
 
     // Create centipede
     length = len;
@@ -39,14 +40,11 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomF
     }
 
     // Connect to timer
-    QTimer * timer = new QTimer();
+    timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 
     // Start timer
     timer->start(speed);
-
-    // Centipede is not intially turning
-    turning = -1;
 }
 
 Centipede::Centipede(MushroomField *mushroom_field)
@@ -70,12 +68,27 @@ void Centipede::addToScene(QGraphicsScene * scene) {
 
 void Centipede::start(int speed)
 {
+    if (speed < 50)
+        speed = 50;
+
     // Connect to timer
-    QTimer * timer = new QTimer();
+    timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 
     // Start timer
     timer->start(speed);
+
+    this->speed = speed;
+    qDebug() << "Speed: " << speed;
+}
+
+void Centipede::update_speed(int speed)
+{
+    if (speed < 50)
+        speed = 50;
+    timer->setInterval(speed);
+    this->speed = speed;
+    qDebug() << "Speed: " << speed;
 }
 
 // Move the centipede
@@ -245,7 +258,7 @@ void Centipede_Segment::set_head(bool direction)
 Centipedes::Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field)
 {
     // Start a single centipede
-    Centipede *centipede = new Centipede(12, 0, 0, 300, true, mushroom_field);
+    Centipede *centipede = new Centipede(12, 0, 0, 200, true, mushroom_field);
     centipedes.push_back(centipede);
     centipede->addToScene(scene);
 
@@ -305,6 +318,7 @@ void Centipedes::collision_check()
                     centipedes[i]->segments.pop_back();
                     centipedes[i]->segments.back()->set_head(centipedes[i]->direction);
                     centipedes[i]->length-=1;
+                    centipedes[i]->update_speed(centipedes[i]->speed - 30);
                 }
 
                 // If this segment is the tail, delete the segment
@@ -312,6 +326,7 @@ void Centipedes::collision_check()
                     scene->removeItem(centipedes[i]->segments[j]);
                     centipedes[i]->segments.erase(centipedes[i]->segments.begin());
                     centipedes[i]->length-=1;
+                    centipedes[i]->update_speed(centipedes[i]->speed - 30);
                 }
 
                 // If this segment is in the middle of the centipede,
@@ -327,7 +342,7 @@ void Centipedes::collision_check()
                         new_cent->direction = true;
                     else
                         new_cent->direction = false;
-                    new_cent->start(110);
+                    new_cent->start(centipedes[i]->speed - 30);
                     new_cent->segments[new_cent->length - 1]->set_head(new_cent->direction);
                     centipedes.push_back(new_cent);
 
@@ -339,7 +354,7 @@ void Centipedes::collision_check()
                         new_cent->direction = true;
                     else
                         new_cent->direction = false;
-                    new_cent->start(110);
+                    new_cent->start(centipedes[i]->speed - 30);
                     centipedes.push_back(new_cent);
 
                     del = centipedes[i];
