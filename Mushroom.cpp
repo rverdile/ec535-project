@@ -5,9 +5,6 @@
 
 #include <QDebug>
 
-#define FIELD_W 800
-#define FIELD_H 544
-
 Mushroom::Mushroom()
 {
     setPixmap(QPixmap(":/images/images/mushroom_4hp.png"));
@@ -58,30 +55,28 @@ MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
     this->num_mushrooms = num_mushrooms;
     this->myscene = myscene;
 
-    int binary_field[FIELD_W/32][FIELD_H/32] = {};
-
     srand((unsigned) time(NULL));
 
-    for(size_t i = 0; i < num_mushrooms; i++) {
+    for(int i = 0; i < num_mushrooms; i++) {
 
-        int x_rand = rand() % FIELD_W/32;
-        int y_rand = rand() % FIELD_H/32;
+        int x_rand = rand() % FIELD_W/25;
+        int y_rand = rand() % FIELD_H/25;
 
         binary_field[x_rand][y_rand] = 1;
 
-        qDebug() << FIELD_H/32;
-        qDebug() << FIELD_W/32;
+        qDebug() << FIELD_H/25;
+        qDebug() << FIELD_W/25;
 
     }
 
-    for(int i = 0; i < FIELD_W/32; i++)
+    for(int i = 0; i < FIELD_W/25; i++)
     {
-        for(int j = 0; j < FIELD_H/32; j++)
+        for(int j = 0; j < FIELD_H/25; j++)
         {
             if(binary_field[i][j])
             {
                 Mushroom * mushroom = new Mushroom();
-                mushroom->setPos(i*32,j*32);
+                mushroom->setPos(i*25,j*25);
                 mushroom_field.push_back(mushroom);
 
             }

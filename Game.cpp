@@ -14,12 +14,12 @@ Game::Game(QWidget *parent)
     setFixedSize(800,700);
     scene->setBackgroundBrush(Qt::black);
 
-    // Create centipede
-    centipedes = new Centipedes(scene);
-
     // Create mushroom field
     int num_mushrooms = 50;
     MushroomField * mushroom_field = new MushroomField(num_mushrooms,scene);
+    //MushroomField *mushroom_field = nullptr;
+    // Create centipede
+    centipedes = new Centipedes(scene, mushroom_field);
 
     // Create blaster
     blaster = new Blaster(centipedes, mushroom_field);

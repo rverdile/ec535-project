@@ -5,6 +5,9 @@
 #include <QObject>
 #include <QGraphicsItem>
 
+#define FIELD_W 800
+#define FIELD_H 550
+
 class Mushroom: public QObject,public QGraphicsPixmapItem{
     Q_OBJECT
 public:
@@ -21,6 +24,7 @@ class MushroomField: public QObject, QGraphicsPixmapItem{
 public:
     MushroomField(int num_mushrooms, QGraphicsScene * myscene);
     std::vector<Mushroom *> mushroom_field;
+    int binary_field[FIELD_W/25][FIELD_H/25] = {};
 public slots:
     void dartCollision();
 private:
