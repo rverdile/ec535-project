@@ -15,7 +15,7 @@ int Mushroom::getHealth()
     return this->health;
 }
 
-void Mushroom::decrementHealth()
+bool Mushroom::decrementHealth()
 {
     this->health--;
 
@@ -28,11 +28,13 @@ void Mushroom::decrementHealth()
             setPixmap(QPixmap(":/images/images/mushroom_2hp.png"));
         else if(health == 1)
             setPixmap(QPixmap(":/images/images/mushroom_1hp.png"));
+        return false;
     }
     else
     {
        scene()->removeItem(this);
        //delete this;
+       return true;
     }
 }
 
@@ -94,7 +96,13 @@ void MushroomField::dartCollision()
     {
         if(mushroom_field[i]->is_shot())
         {
-            mushroom_field[i]->decrementHealth();
+            if (mushroom_field[i]->decrementHealth()) {
+
+                // Remove from binary field if mushroom is gone
+                int x = mushroom_field[i]->x()/25;
+                int y = mushroom_field[i]->y()/25;
+                binary_field[x][y] = 0;
+            }
         }
     }
 }

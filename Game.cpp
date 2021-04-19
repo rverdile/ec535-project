@@ -17,7 +17,7 @@ Game::Game(QWidget *parent)
     // Create mushroom field
     int num_mushrooms = 50;
     MushroomField * mushroom_field = new MushroomField(num_mushrooms,scene);
-    //MushroomField *mushroom_field = nullptr;
+
     // Create centipede
     centipedes = new Centipedes(scene, mushroom_field);
 
