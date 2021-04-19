@@ -13,6 +13,7 @@ public slots: // member function that can be connected to a signal
     void move();
 signals:
     void collision();
+    void mushroomCollision();
 };
 
 #endif // DART_H

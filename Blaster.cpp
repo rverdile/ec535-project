@@ -3,10 +3,12 @@
 #include <QDebug>
 #include "Blaster.h"
 #include "Dart.h"
+#include "Mushroom.h"
 
-Blaster::Blaster(Centipedes * centipedes)
+Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field)
 {
     this->centipedes = centipedes;
+    this->mushroom_field = mushroom_field;
     setPixmap(QPixmap(":/images/images/blaster.png"));
 }
 
@@ -29,13 +31,13 @@ void Blaster::keyPressEvent(QKeyEvent *event)
     }
     if(event->key() == Qt::Key_Up) {
 
-        if(pos().y() > 530)
+        if(pos().y() > 550)
         {
             mov_y -= speed;
         }
     }
     else if(event->key() == Qt::Key_Down) {
-        if(pos().y()+32 < 600)
+        if(pos().y()+32 < 700)
         {
             mov_y += speed;
         }
@@ -45,6 +47,7 @@ void Blaster::keyPressEvent(QKeyEvent *event)
         //create a dart
         Dart * dart = new Dart();
         QObject::connect(dart, &Dart::collision, centipedes, &Centipedes::collision_check);
+        QObject::connect(dart, &Dart::mushroomCollision, mushroom_field, &MushroomField::dartCollision);
         dart->setPos(x(),y());
         scene()->addItem(dart);
     }
