@@ -10,10 +10,14 @@
 //          Centipede Definitions
 //-------------------------------------------
 
+int counter = 0;
 // Constructor
 // Create a centipede and start movement timer
-Centipede::Centipede(int len, int x, int y, int speed, bool direction)
+Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomField *mushroom_field)
 {
+    this->mushroom_field = mushroom_field;
+    this->speed = speed;
+
     // Create centipede
     length = len;
     this->direction = direction;
@@ -31,18 +35,21 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction)
         else
             segment->setPos(x-25*i,y);
 
+        segment->state = 0;
         segments.push_back(segment);
     }
 
     // Connect to timer
-    QTimer * timer = new QTimer();
+    timer = new QTimer();
     connect(timer, SIGNAL(timeout()), this, SLOT(move()));
 
     // Start timer
     timer->start(speed);
+}
 
-    // Centipede is not intially turning
-    turning = -1;
+Centipede::Centipede(MushroomField *mushroom_field)
+{
+    this->mushroom_field = mushroom_field;
 }
 
 Centipede::~Centipede()
@@ -59,120 +66,120 @@ void Centipede::addToScene(QGraphicsScene * scene) {
     }
 }
 
+void Centipede::start(int speed)
+{
+    if (speed < 50)
+        speed = 50;
+
+    // Connect to timer
+    timer = new QTimer();
+    connect(timer, SIGNAL(timeout()), this, SLOT(move()));
+
+    // Start timer
+    timer->start(speed);
+
+    this->speed = speed;
+    qDebug() << "Speed: " << speed;
+}
+
+void Centipede::update_speed(int speed)
+{
+    if (speed < 50)
+        speed = 50;
+    timer->setInterval(speed);
+    this->speed = speed;
+    qDebug() << "Speed: " << speed;
+}
+
 // Move the centipede
 void Centipede::move()
 {    
+    bool turn_around = false;
 
-    bool turned = false;
-
-    // Moving right
-    if (direction) {
-
-        // Move each segment individually
-        for (int i = 0; i < length; i++) {
-            Centipede_Segment *segment = segments[i];
-
-            // Not turning
-            if (turning == -1) {
-
-                // Done turning, move left to complete loop
-                if (!direction) {
-                    segment->setPos(segment->x()-25, segment->y());
-                }
-
-                // Not turning yet, move right
-                else if (segment->pos().x() < 775) {
-                    segment->setPos(segment->x()+25, segment->y());
-                }
-
-                // Has reached wall, start the turn
-                else {
-                    turning = length - 2;
-                    segment->setPos(segment->x(), segment->y()+25);
-                    segment->set_head(!direction);
-
-                    // If length is 1, turning is complete
-                    if (turning == -1) {
-                        direction = false;
-                    }
-                }
-            }
-            else {
-                // If segment not yet to wall, move right
-                if (i < turning) {
-                    segment->setPos(segment->x()+25, segment->y());
-                }
-                // If segment has already turned, move left
-                else if (i > turning) {
-                    segment->setPos(segment->x()-25, segment->y());
-                }
-                // If segment is currently turning, move it down
-                else {
-                    turning -= 1;
-                    segment->setPos(segment->x(), segment->y() + 25);
-
-                    // Done turning, mark direction change
-                    if (turning == -1) {
-                        direction = false;
-                    }
-                }
-            }
-        }
+    // Check if head is about to hit mushroom
+    if (mushroom_collision(segments[length-1])) {
+        qDebug() << counter<<": Collision";
+        counter++;
+        turn_around = true;
     }
 
-    // Moving left
-    else {
+    for (int i = 0; i < length; i++) {
+        Centipede_Segment *segment = segments[i];
 
-        // Move each segment individually
-        for (int i = length -1; i >= 0; i--) {
-            Centipede_Segment *segment = segments[i];
+        // Moving right
+        if (segment->state==0) {
 
-            // Moving left, not turning
-            if (turning == -1) {
-                if (segment->pos().x() > 0) {
-                    segment->setPos(segment->x()-25, segment->y());
-                }
-                // Has reached wall, start the turn
-                else {
-                    turning = length - 2;
-                    turned = true;
-                    segment->setPos(segment->x(), segment->y()+25);
-                    segment->set_head(!direction);
-
-                    // If length is 1, turning is complete
-                    if (turning == -1) {
-                        direction = true;
-                    }
-                }
+            // If it's not the head, move it irght
+            if (i != length - 1) {
+                 segment->setPos(segment->x()+25, segment->y());
             }
+            // If it's the head
             else {
-                // If segment not yet to wall, move left
-                if (i > turning) {
-                    segment->setPos(segment->x()+25, segment->y());
+                // If not turning around, move right
+                if (!turn_around) {
+                    if (segment->x() < 775) {
+                        segment->setPos(segment->x()+25, segment->y());
+                        continue;
+                    }
                 }
-                // If segment has already turned, move left
-                else if (i < turning) {
-                    segment->setPos(segment->x()-25, segment->y());
-                }
-                // If segment is currently turning, move it down
-                else if (!turned){
-                    turning -= 1;
-                    turned = true;
-                    segment->setPos(segment->x(), segment->y() + 25);
+                // Otherwise, turn around
+                turn_around = false;
+                segment->setPos(segment->x(), segment->y()+25);
+                direction = false;
+                segment->state = 2;
+                segment->set_head(direction);
+                if (i != 0)
+                    segments[i-1]->state = 1;
+            }
+        }
 
-                    // Done turning, mark direction change
-                    if (turning == -1) {
-                        direction = true;
+        // Turning left
+        else if (segment->state == 1) {
+
+            //Turn
+            segment->setPos(segment->x(), segment->y()+25);
+            segment->state = 2;
+
+            // Set next next segment to turn state
+            if (i != 0)
+                segments[i-1]->state = 1;
+
+        }
+
+        // Moving left
+        else if (segment->state == 2) {
+
+            // If it's not the head, move left
+            if (i != length - 1) {
+                 segment->setPos(segment->x()-25, segment->y());
+            }
+            // If it's the head
+            else {
+
+                // Move left if not turning
+                if (!turn_around) {
+                    if (segment->x() > 0) {
+                        segment->setPos(segment->x()-25, segment->y());
+                        continue;
                     }
                 }
 
-                // If it's the segments turn to turn, but not until next loop,
-                // move it left
-                else {
-                    segment->setPos(segment->x()-25, segment->y());
-                    turned = false;
-                }
+                // Otherwise, turn around
+                turn_around = false;
+                segment->setPos(segment->x(), segment->y()+25);
+                direction = true;
+                segment->state = 0;
+                segment->set_head(direction);
+                if (i != 0)
+                    segments[i-1]->state = 3;
             }
+        }
+        // Turning right
+        else if (segment->state == 3) {
+            segment->setPos(segment->x() , segment->y()+25);
+            segment->state = 0;
+            if (i != 0)
+                segments[i-1]->state = 3;
         }
     }
 }
@@ -210,6 +217,26 @@ bool Centipede_Segment::is_shot()
     return false;
 }
 
+// Returns true if segment is about to hit a mushroom
+bool Centipede::mushroom_collision(Centipede_Segment *segment)
+{
+    int x = segment->x();
+    int y = segment->y();
+
+    if (direction)
+        x += 25;
+    else
+        x -= 25;
+
+    x /= 25;
+    y /= 25;
+
+    if (mushroom_field->binary_field[x][y])
+        return true;
+
+    return false;
+}
+
 
 // Set segment as a head
 void Centipede_Segment::set_head(bool direction)
@@ -228,13 +255,14 @@ void Centipede_Segment::set_head(bool direction)
 
 // Centipedes constructor
 // Game starts with 1 centipede, length 12, top of screen
-Centipedes::Centipedes(QGraphicsScene *scene)
+Centipedes::Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field)
 {
     // Start a single centipede
-    Centipede *centipede = new Centipede(12, 0, 100, 150, true);
+    Centipede *centipede = new Centipede(12, 0, 0, 200, true, mushroom_field);
     centipedes.push_back(centipede);
     centipede->addToScene(scene);
 
+    this->mushroom_field = mushroom_field;
     this->scene = scene;
 }
 
@@ -254,6 +282,8 @@ Centipedes::~Centipedes()
 void Centipedes::collision_check()
 {
     std::vector<int> deleting;
+    int del_num = -1;
+    Centipede *del = nullptr;
     for (int i = 0; i < int(centipedes.size()); i++) {
         for (int j = 0; j < int(centipedes[i]->segments.size()); j++) {
 
@@ -264,6 +294,17 @@ void Centipedes::collision_check()
                 int length = centipedes[i]->segments.size();
 
                 //TO-DO: turn segments into mushrooms instead of deleting them
+                int x = centipedes[i]->segments[j]->x();
+                int y = centipedes[i]->segments[j]->y();
+
+                Mushroom * mushroom = new Mushroom();
+                mushroom->setPos(x,y);
+                mushroom_field->mushroom_field.push_back(mushroom);
+                scene->addItem(mushroom);
+
+                x /= 25;
+                y /= 25;
+                mushroom_field->binary_field[x][y] = 1;
 
                 // If there is only one segment in centipede, delete centipede
                 if (length == 1) {
@@ -277,6 +318,7 @@ void Centipedes::collision_check()
                     centipedes[i]->segments.pop_back();
                     centipedes[i]->segments.back()->set_head(centipedes[i]->direction);
                     centipedes[i]->length-=1;
+                    centipedes[i]->update_speed(centipedes[i]->speed - 30);
                 }
 
                 // If this segment is the tail, delete the segment
@@ -284,25 +326,41 @@ void Centipedes::collision_check()
                     scene->removeItem(centipedes[i]->segments[j]);
                     centipedes[i]->segments.erase(centipedes[i]->segments.begin());
                     centipedes[i]->length-=1;
+                    centipedes[i]->update_speed(centipedes[i]->speed - 30);
                 }
 
                 // If this segment is in the middle of the centipede,
                 // delete the segment and separate the centipede into two
                 else {
 
-                    // Mark centipede for deletion
-                    deleting.push_back(i);
-
                     // Create new centipedes
-                    Centipede *new_cent;
-
-                    new_cent = new Centipede(j, centipedes[i]->segments.front()->x(), centipedes[i]->segments.front()->y(), 110, centipedes[i]->direction);
+                    Centipede *new_cent = new Centipede(mushroom_field);
+                    for (int k = 0; k < j; k++)
+                        new_cent->segments.push_back(centipedes[i]->segments[k]);
+                    new_cent->length = j;
+                    if (new_cent->segments[new_cent->length-1]->state == 0)
+                        new_cent->direction = true;
+                    else
+                        new_cent->direction = false;
+                    new_cent->start(centipedes[i]->speed - 30);
+                    new_cent->segments[new_cent->length - 1]->set_head(new_cent->direction);
                     centipedes.push_back(new_cent);
-                    new_cent->addToScene(scene);
 
-                    new_cent = new Centipede(length - j - 1, centipedes[i]->segments[j+1]->x(), centipedes[i]->segments[j+1]->y(), 110, centipedes[i]->direction);
+                    new_cent = new Centipede(mushroom_field);
+                    for (int k = j + 1; k < length; k++)
+                        new_cent->segments.push_back(centipedes[i]->segments[k]);
+                    new_cent->length = length - j - 1;
+                    if (new_cent->segments[new_cent->length-1]->state == 0)
+                        new_cent->direction = true;
+                    else
+                        new_cent->direction = false;
+                    new_cent->start(centipedes[i]->speed - 30);
                     centipedes.push_back(new_cent);
-                    new_cent->addToScene(scene);
+
+                    del = centipedes[i];
+                    scene->removeItem(centipedes[i]->segments[j]);
+                    del_num = i;
+                    deleting.push_back(del_num);
                 }
 
                 break;
@@ -311,14 +369,20 @@ void Centipedes::collision_check()
         }
     }
 
-    // For any scenes marked for deletiong, remove from scene
+    // For any centipedes marked for deletion, remove from scene
     // and delete from centipedes vector
     for (int i = int(deleting.size()) - 1; i >= 0; i--) {
-        Centipede * temp = centipedes[deleting[i]];
-        for (int j = 0; j < int(temp->segments.size()); j++) {
-            scene->removeItem(temp->segments[j]);
+        if (del != nullptr && deleting[i] == del_num) {
+            delete del;
+            centipedes.erase(centipedes.begin()+deleting[i]);
         }
-        centipedes.erase(centipedes.begin()+deleting[i]);
-        delete temp;
+        else {
+            Centipede * temp = centipedes[deleting[i]];
+            for (int j = 0; j < int(temp->segments.size()); j++) {
+                scene->removeItem(temp->segments[j]);
+            }
+            centipedes.erase(centipedes.begin()+deleting[i]);
+            delete temp;
+        }
     }
 }

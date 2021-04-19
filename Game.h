@@ -18,12 +18,11 @@ class Game : public QGraphicsView
 public:
     Game(QWidget * parent=0);
     ~Game();
-
-    Mushroom *mushroom;
 private:
     QGraphicsScene * scene;
     Centipedes *centipedes;
     Blaster *blaster;
+    MushroomField *mushrooms;
 
 signals:
 

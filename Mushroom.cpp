@@ -5,9 +5,6 @@
 
 #include <QDebug>
 
-#define FIELD_W 800
-#define FIELD_H 544
-
 Mushroom::Mushroom()
 {
     setPixmap(QPixmap(":/images/images/mushroom_4hp.png"));
@@ -18,7 +15,7 @@ int Mushroom::getHealth()
     return this->health;
 }
 
-void Mushroom::decrementHealth()
+bool Mushroom::decrementHealth()
 {
     this->health--;
 
@@ -31,11 +28,13 @@ void Mushroom::decrementHealth()
             setPixmap(QPixmap(":/images/images/mushroom_2hp.png"));
         else if(health == 1)
             setPixmap(QPixmap(":/images/images/mushroom_1hp.png"));
+        return false;
     }
     else
     {
        scene()->removeItem(this);
        //delete this;
+       return true;
     }
 }
 
@@ -58,30 +57,28 @@ MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
     this->num_mushrooms = num_mushrooms;
     this->myscene = myscene;
 
-    int binary_field[FIELD_W/32][FIELD_H/32] = {};
-
     srand((unsigned) time(NULL));
 
-    for(size_t i = 0; i < num_mushrooms; i++) {
+    for(int i = 0; i < num_mushrooms; i++) {
 
-        int x_rand = rand() % FIELD_W/32;
-        int y_rand = rand() % FIELD_H/32;
+        int x_rand = rand() % FIELD_W/25;
+        int y_rand = rand() % FIELD_H/25;
 
         binary_field[x_rand][y_rand] = 1;
 
-        qDebug() << FIELD_H/32;
-        qDebug() << FIELD_W/32;
+        qDebug() << FIELD_H/25;
+        qDebug() << FIELD_W/25;
 
     }
 
-    for(int i = 0; i < FIELD_W/32; i++)
+    for(int i = 0; i < FIELD_W/25; i++)
     {
-        for(int j = 0; j < FIELD_H/32; j++)
+        for(int j = 0; j < FIELD_H/25; j++)
         {
             if(binary_field[i][j])
             {
                 Mushroom * mushroom = new Mushroom();
-                mushroom->setPos(i*32,j*32);
+                mushroom->setPos(i*25,j*25);
                 mushroom_field.push_back(mushroom);
 
             }
@@ -99,7 +96,13 @@ void MushroomField::dartCollision()
     {
         if(mushroom_field[i]->is_shot())
         {
-            mushroom_field[i]->decrementHealth();
+            if (mushroom_field[i]->decrementHealth()) {
+
+                // Remove from binary field if mushroom is gone
+                int x = mushroom_field[i]->x()/25;
+                int y = mushroom_field[i]->y()/25;
+                binary_field[x][y] = 0;
+            }
         }
     }
 }
