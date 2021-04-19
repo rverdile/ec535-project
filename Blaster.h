@@ -15,7 +15,7 @@ public:
     Blaster(Centipedes *, MushroomField *);
     void keyPressEvent(QKeyEvent * event);
 private:
-    int speed = 10;
+    int speed = 15;
     int mov_x = 0;
     int mov_y = 0;
     Centipedes *centipedes;
