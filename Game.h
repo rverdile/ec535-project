@@ -17,12 +17,15 @@ class Game : public QGraphicsView
     Q_OBJECT
 public:
     Game(QWidget * parent=0);
+    void showMainMenu();
     ~Game();
 private:
     QGraphicsScene * scene;
     Centipedes *centipedes;
     Blaster *blaster;
     MushroomField *mushrooms;
+public slots:
+    void start();
 
 signals:
 

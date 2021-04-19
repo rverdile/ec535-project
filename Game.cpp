@@ -2,8 +2,50 @@
 #include "Centipede.h"
 #include "Blaster.h"
 #include "Mushroom.h"
+#include "Button.h"
 
 Game::Game(QWidget *parent)
+{
+    showMainMenu();
+}
+
+void Game::showMainMenu()
+{
+    scene = new QGraphicsScene();
+    scene->setSceneRect(0,0,800,700);
+    setScene(scene);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setFixedSize(800,700);
+    scene->setBackgroundBrush(Qt::black);
+
+    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Centipede"));
+    titleText->setDefaultTextColor(Qt::white);
+    QFont titleFont("Helvetica",50);
+    titleText->setFont(titleFont);
+    int txPos = this->width()/2 - titleText->boundingRect().width()/2;
+    int tyPos = 150;
+    titleText->setPos(txPos,tyPos);
+    scene->addItem(titleText);
+
+    // create the play button
+    Button* playButton = new Button(QString("Play"));
+    int bx = this->width()/2 - playButton->boundingRect().width()/2;
+    int by = 400;
+    playButton->setPos(bx,by);
+    connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
+    scene->addItem(playButton);
+}
+
+Game::~Game()
+{
+    delete centipedes;
+    delete blaster;
+    delete scene;
+    delete mushrooms;
+}
+
+void Game::start()
 {
     // Set up scene
     scene = new QGraphicsScene();
@@ -29,14 +71,6 @@ Game::Game(QWidget *parent)
     blaster->setPos(450,660);
 
     show();
-}
-
-Game::~Game()
-{
-    delete centipedes;
-    delete blaster;
-    delete scene;
-    delete mushrooms;
 }
 
 

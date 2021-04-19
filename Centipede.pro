@@ -10,6 +10,7 @@ CONFIG += c++11
 
 SOURCES += \
     Blaster.cpp \
+    Button.cpp \
     Centipede.cpp \
     Dart.cpp \
     Game.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 
 HEADERS += \
     Blaster.h \
+    Button.h \
     Centipede.h \
     Dart.h \
     Game.h \
