@@ -16,13 +16,13 @@ Game::Game(QWidget *parent)
 
     // Create mushroom field
     int num_mushrooms = 50;
-    MushroomField * mushroom_field = new MushroomField(num_mushrooms,scene);
+    mushrooms = new MushroomField(num_mushrooms,scene);
 
     // Create centipede
-    centipedes = new Centipedes(scene, mushroom_field);
+    centipedes = new Centipedes(scene, mushrooms);
 
     // Create blaster
-    blaster = new Blaster(centipedes, mushroom_field);
+    blaster = new Blaster(centipedes, mushrooms);
     blaster->setFlag(QGraphicsItem::ItemIsFocusable);
     blaster->setFocus();
     scene->addItem(blaster);
@@ -36,7 +36,7 @@ Game::~Game()
     delete centipedes;
     delete blaster;
     delete scene;
-    delete mushroom;
+    delete mushrooms;
 }
 
 
