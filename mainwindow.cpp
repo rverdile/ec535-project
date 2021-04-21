@@ -4,6 +4,7 @@
 #include <QGraphicsRectItem>
 #include <QGraphicsView>
 
+Game * game;
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
 {

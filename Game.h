@@ -8,6 +8,7 @@
 #include "Centipede.h"
 #include "Blaster.h"
 #include "Mushroom.h"
+#include "Score.h"
 
 #define SCENE_W 800;
 #define SCENE_H 600;
@@ -19,6 +20,7 @@ public:
     Game(QWidget * parent=0);
     void showMainMenu();
     ~Game();
+    Score * score;
 private:
     QGraphicsScene * scene;
     Centipedes *centipedes;

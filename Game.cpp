@@ -3,6 +3,7 @@
 #include "Blaster.h"
 #include "Mushroom.h"
 #include "Button.h"
+#include "Dart.h"
 
 Game::Game(QWidget *parent)
 {
@@ -69,6 +70,10 @@ void Game::start()
     blaster->setFocus();
     scene->addItem(blaster);
     blaster->setPos(450,660);
+
+    // Create Score
+    Score * score = new Score();
+    scene->addItem(score->scoreText);
 
     show();
 }
