@@ -18,17 +18,17 @@ class Game : public QGraphicsView
     Q_OBJECT
 public:
     Game(QWidget * parent=0);
-    void showMainMenu();
     ~Game();
-    Score * score;
+    Score * score = nullptr;
 private:
-    QGraphicsScene * scene;
-    Centipedes *centipedes;
-    Blaster *blaster;
-    MushroomField *mushrooms;
+    QGraphicsScene * scene = nullptr;
+    Centipedes *centipedes = nullptr;
+    Blaster *blaster = nullptr;
+    MushroomField *mushrooms = nullptr;
 public slots:
     void start();
-
+    void showHowToPlay();
+    void showMainMenu();
 signals:
 
 };
