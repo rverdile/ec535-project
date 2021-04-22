@@ -10,6 +10,7 @@ public:
     QGraphicsTextItem* scoreText;
     void tailIncrease(); // increase when tail is shot
     void headIncrease(); // increase when head it shot
+    void mushIncrease(); // increase when mushroom destroyed
 private:
     void formatText();
     long score;

@@ -30,10 +30,19 @@ void Score::headIncrease()
     scene->addItem(scoreText);
 }
 
+void Score::mushIncrease()
+{
+    score += 1;
+    scene->removeItem(scoreText);
+    scoreText = new QGraphicsTextItem(QString("SCORE: ") +  QString::number(score));
+    formatText();
+    scene->addItem(scoreText);
+}
+
 void Score::formatText()
 {
     scoreText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Helvetica",24);
+    QFont titleFont("Helvetica",20);
     scoreText->setFont(titleFont);
     scoreText->setPos(30,0);
 }

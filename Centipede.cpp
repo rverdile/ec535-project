@@ -234,7 +234,7 @@ bool Centipede::mushroom_collision(Centipede_Segment *segment)
     x /= 25;
     y /= 25;
 
-    if (mushroom_field->binary_field[x][y])
+    if (mushroom_field->binary_field[x][y - 2])
         return true;
 
     return false;
@@ -261,7 +261,7 @@ void Centipede_Segment::set_head(bool direction)
 Centipedes::Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field)
 {
     // Start a single centipede
-    Centipede *centipede = new Centipede(12, 0, 0, 200, true, mushroom_field);
+    Centipede *centipede = new Centipede(12, 0, 50, 200, true, mushroom_field);
     centipedes.push_back(centipede);
     centipede->addToScene(scene);
 
@@ -306,7 +306,7 @@ void Centipedes::collision_check()
 
                 x /= 25;
                 y /= 25;
-                mushroom_field->binary_field[x][y] = 1;
+                mushroom_field->binary_field[x][y - 2] = 1;
 
                 // If there is only one segment in centipede, delete centipede
                 if (length == 1) {

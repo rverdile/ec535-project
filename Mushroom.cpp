@@ -2,8 +2,11 @@
 #include <QGraphicsScene>
 #include "Mushroom.h"
 #include "Dart.h"
+#include "Game.h"
 
 #include <QDebug>
+
+extern Game * game;
 
 Mushroom::Mushroom()
 {
@@ -33,6 +36,7 @@ bool Mushroom::decrementHealth()
     else
     {
        scene()->removeItem(this);
+       game->score->mushIncrease();
        return true;
     }
 }
