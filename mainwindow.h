@@ -11,8 +11,5 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
-private:
-    Game *game;
 };
 #endif // MAINWINDOW_H

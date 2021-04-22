@@ -296,7 +296,6 @@ void Centipedes::collision_check()
                 // Get length of centipede
                 int length = centipedes[i]->segments.size();
 
-                //TO-DO: turn segments into mushrooms instead of deleting them
                 int x = centipedes[i]->segments[j]->x();
                 int y = centipedes[i]->segments[j]->y();
 
@@ -338,9 +337,8 @@ void Centipedes::collision_check()
                 // If this segment is in the middle of the centipede,
                 // delete the segment and separate the centipede into two
                 else {
-                    qDebug()<<"here";
                     game->score->tailIncrease();
-                    qDebug()<<"here";
+
                     // Create new centipedes
                     Centipede *new_cent = new Centipede(mushroom_field);
                     for (int k = 0; k < j; k++)

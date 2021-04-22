@@ -72,7 +72,7 @@ void Game::start()
     blaster->setPos(450,660);
 
     // Create Score
-    Score * score = new Score();
+    score = new Score(scene);
     scene->addItem(score->scoreText);
 
     show();
