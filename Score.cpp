@@ -42,7 +42,7 @@ void Score::mushIncrease()
 void Score::formatText()
 {
     scoreText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Helvetica",20);
+    QFont titleFont("Bauhaus 93",20);
     scoreText->setFont(titleFont);
     scoreText->setPos(30,0);
 }

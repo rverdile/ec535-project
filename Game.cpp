@@ -22,7 +22,7 @@ void Game::showMainMenu()
 
     QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Centipede"));
     titleText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Helvetica",50);
+    QFont titleFont("Bauhaus 93",50);
     titleText->setFont(titleFont);
     int txPos = this->width()/2 - titleText->boundingRect().width()/2;
     int tyPos = 150;
@@ -40,10 +40,14 @@ void Game::showMainMenu()
 
 Game::~Game()
 {
-    delete centipedes;
-    delete blaster;
-    delete scene;
-    delete mushrooms;
+    if (centipedes)
+        delete centipedes;
+    if (blaster)
+        delete blaster;
+    if (scene)
+        delete scene;
+    if (mushrooms)
+        delete mushrooms;
 }
 
 void Game::start()
