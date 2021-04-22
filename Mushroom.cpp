@@ -2,8 +2,11 @@
 #include <QGraphicsScene>
 #include "Mushroom.h"
 #include "Dart.h"
+#include "Game.h"
 
 #include <QDebug>
+
+extern Game * game;
 
 Mushroom::Mushroom()
 {
@@ -33,7 +36,7 @@ bool Mushroom::decrementHealth()
     else
     {
        scene()->removeItem(this);
-       //delete this;
+       game->score->mushIncrease();
        return true;
     }
 }
@@ -66,9 +69,6 @@ MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
 
         binary_field[x_rand][y_rand] = 1;
 
-        qDebug() << FIELD_H/25;
-        qDebug() << FIELD_W/25;
-
     }
 
     for(int i = 0; i < FIELD_W/25; i++)
@@ -78,7 +78,7 @@ MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
             if(binary_field[i][j])
             {
                 Mushroom * mushroom = new Mushroom();
-                mushroom->setPos(i*25,j*25);
+                mushroom->setPos(i*25,50+j*25);
                 mushroom_field.push_back(mushroom);
 
             }

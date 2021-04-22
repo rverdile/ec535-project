@@ -1,10 +1,13 @@
 #include "Centipede.h"
 #include "Dart.h"
+#include "Game.h"
 #include <QTimer>
 #include <QGraphicsRectItem>
 #include <QList>
 
 #include <QDebug>
+
+extern Game * game;
 
 //-------------------------------------------
 //          Centipede Definitions
@@ -231,7 +234,7 @@ bool Centipede::mushroom_collision(Centipede_Segment *segment)
     x /= 25;
     y /= 25;
 
-    if (mushroom_field->binary_field[x][y])
+    if (mushroom_field->binary_field[x][y - 2])
         return true;
 
     return false;
@@ -258,7 +261,7 @@ void Centipede_Segment::set_head(bool direction)
 Centipedes::Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field)
 {
     // Start a single centipede
-    Centipede *centipede = new Centipede(12, 0, 0, 200, true, mushroom_field);
+    Centipede *centipede = new Centipede(12, 0, 50, 200, true, mushroom_field);
     centipedes.push_back(centipede);
     centipede->addToScene(scene);
 
@@ -293,7 +296,6 @@ void Centipedes::collision_check()
                 // Get length of centipede
                 int length = centipedes[i]->segments.size();
 
-                //TO-DO: turn segments into mushrooms instead of deleting them
                 int x = centipedes[i]->segments[j]->x();
                 int y = centipedes[i]->segments[j]->y();
 
@@ -304,16 +306,18 @@ void Centipedes::collision_check()
 
                 x /= 25;
                 y /= 25;
-                mushroom_field->binary_field[x][y] = 1;
+                mushroom_field->binary_field[x][y - 2] = 1;
 
                 // If there is only one segment in centipede, delete centipede
                 if (length == 1) {
+                    game->score->headIncrease();
                     deleting.push_back(i);
                 }
 
                 // If this segment is the head, delete the segment
                 // and convert first body segment into head
                 else if (j == length - 1) {
+                    game->score->headIncrease();
                     scene->removeItem(centipedes[i]->segments[j]);
                     centipedes[i]->segments.pop_back();
                     centipedes[i]->segments.back()->set_head(centipedes[i]->direction);
@@ -323,6 +327,7 @@ void Centipedes::collision_check()
 
                 // If this segment is the tail, delete the segment
                 else if (j == 0) {
+                    game->score->tailIncrease();
                     scene->removeItem(centipedes[i]->segments[j]);
                     centipedes[i]->segments.erase(centipedes[i]->segments.begin());
                     centipedes[i]->length-=1;
@@ -332,6 +337,7 @@ void Centipedes::collision_check()
                 // If this segment is in the middle of the centipede,
                 // delete the segment and separate the centipede into two
                 else {
+                    game->score->tailIncrease();
 
                     // Create new centipedes
                     Centipede *new_cent = new Centipede(mushroom_field);

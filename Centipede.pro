@@ -15,6 +15,7 @@ SOURCES += \
     Dart.cpp \
     Game.cpp \
     Mushroom.cpp \
+    Score.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -25,6 +26,7 @@ HEADERS += \
     Dart.h \
     Game.h \
     Mushroom.h \
+    Score.h \
     mainwindow.h
 
 # Default rules for deployment.

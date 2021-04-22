@@ -6,7 +6,7 @@
 #include <QGraphicsItem>
 
 #define FIELD_W 800
-#define FIELD_H 550
+#define FIELD_H 500
 #define FULL_W 800
 #define FULL_H 700
 
