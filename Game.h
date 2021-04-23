@@ -25,10 +25,13 @@ private:
     Centipedes *centipedes = nullptr;
     Blaster *blaster = nullptr;
     MushroomField *mushrooms = nullptr;
+    void removeItems();
 public slots:
     void start();
     void showHowToPlay();
     void showMainMenu();
+    void showGameEnd();
+    void closeGame();
 signals:
 
 };

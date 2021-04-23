@@ -14,6 +14,10 @@ class Blaster: public QObject,public QGraphicsPixmapItem{
 public:
     Blaster(Centipedes *, MushroomField *);
     void keyPressEvent(QKeyEvent * event);
+public slots:
+    void collisionCheck();
+signals:
+    void endGame();
 private:
     int speed = 15;
     int mov_x = 0;

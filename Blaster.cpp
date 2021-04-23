@@ -1,5 +1,6 @@
 #include <QKeyEvent>
 #include <QGraphicsScene>
+#include <QTimer>
 #include <QDebug>
 #include "Blaster.h"
 #include "Dart.h"
@@ -10,6 +11,11 @@ Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field)
     this->centipedes = centipedes;
     this->mushroom_field = mushroom_field;
     setPixmap(QPixmap(":/images/images/blaster.png"));
+
+    // connects timeout() function of timer to collisionCheck slot of blaster
+    QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
+    connect(timer,SIGNAL(timeout()),this,SLOT(collisionCheck()));
+    timer->start(5); // 5ms
 }
 
 void Blaster::keyPressEvent(QKeyEvent *event)
@@ -53,4 +59,17 @@ void Blaster::keyPressEvent(QKeyEvent *event)
     }
 
     setPos((x()+mov_x),(y()+mov_y));
+}
+
+void Blaster::collisionCheck()
+{
+
+    QList<QGraphicsItem *> colliding_items = collidingItems();
+    // Check for collision with centipede
+    for (int i = 0, n = colliding_items.size(); i < n; i++) {
+        if (typeid(*(colliding_items[i])) == typeid (Centipede_Segment)) {
+            qDebug() << "COLLISION";
+            emit endGame();
+        }
+    }
 }

@@ -1,3 +1,4 @@
+#include <QApplication>
 #include "Game.h"
 #include "Centipede.h"
 #include "Blaster.h"
@@ -105,7 +106,65 @@ void Game::showHowToPlay()
     scene->addItem(menuButton);
 }
 
+void Game::showGameEnd()
+{
+    // remove items
+    this->removeItems();
+
+    scene = new QGraphicsScene();
+    scene->setSceneRect(0,0,800,700);
+    setScene(scene);
+    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    setFixedSize(800,700);
+    scene->setBackgroundBrush(Qt::black);
+
+    // Create the title
+    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("You Died!"));
+    titleText->setDefaultTextColor(Qt::white);
+    QFont titleFont("Bauhaus 93",50);
+    titleText->setFont(titleFont);
+    int x = this->width()/2 - titleText->boundingRect().width()/2;
+    int y = 150;
+    titleText->setPos(x,y);
+    scene->addItem(titleText);
+
+    // Create the play button
+    Button* playButton = new Button(QString("Play Again"));
+    x = this->width()/2 - playButton->boundingRect().width()/2;
+    y = 350;
+    playButton->setPos(x,y);
+    connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
+    scene->addItem(playButton);
+
+    // Create the Exit button
+    Button* exitButton = new Button(QString("Exit"));
+    x = this->width()/2 - exitButton->boundingRect().width()/2;
+    y = 450;
+    exitButton->setPos(x,y);
+    connect(exitButton,SIGNAL(clicked()),this,SLOT(closeGame()));
+    scene->addItem(exitButton);
+}
+
+void Game::closeGame()
+{
+    qApp->exit(); // this isn't exiting gracefully it's crashing
+    //this->~Game();
+}
+
 Game::~Game()
+{
+    if (centipedes != nullptr)
+        delete centipedes;
+    if (blaster != nullptr)
+        delete blaster;
+    if (scene != nullptr)
+        delete scene;
+    if (mushrooms != nullptr)
+        delete mushrooms;
+}
+
+void Game::removeItems()
 {
     if (centipedes != nullptr)
         delete centipedes;
@@ -141,6 +200,9 @@ void Game::start()
     blaster->setFocus();
     scene->addItem(blaster);
     blaster->setPos(450,660);
+
+    // Connect Blaster/Centipede collision to endgame
+    connect(blaster,SIGNAL(endGame()),this,SLOT(showGameEnd()));
 
     // Create Score
     score = new Score(scene);
