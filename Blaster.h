@@ -9,6 +9,8 @@
 #include "Centipede.h"
 #include "Mushroom.h"
 
+#define NEW_LIFE_SCORE 100
+
 class Blaster: public QObject,public QGraphicsPixmapItem{
     Q_OBJECT
 public:
@@ -16,12 +18,15 @@ public:
     void keyPressEvent(QKeyEvent * event);
 public slots:
     void collisionCheck();
+    void checkScore();
 signals:
     void endGame();
 private:
     int speed = 15;
     int mov_x = 0;
     int mov_y = 0;
+    int lives = 0;
+    int score_int_idx = 0;
     Centipedes *centipedes;
     MushroomField * mushroom_field;
 };

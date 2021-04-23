@@ -5,6 +5,9 @@
 #include "Blaster.h"
 #include "Dart.h"
 #include "Mushroom.h"
+#include "Game.h"
+
+extern Game * game;
 
 Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field)
 {
@@ -15,6 +18,10 @@ Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field)
     // connects timeout() function of timer to collisionCheck slot of blaster
     QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
     connect(timer,SIGNAL(timeout()),this,SLOT(collisionCheck()));
+    timer->start(5); // 5ms
+
+    // connect checkScore timer
+    connect(timer,SIGNAL(timeout()),this,SLOT(checkScore()));
     timer->start(5); // 5ms
 }
 
@@ -68,8 +75,26 @@ void Blaster::collisionCheck()
     // Check for collision with centipede
     for (int i = 0, n = colliding_items.size(); i < n; i++) {
         if (typeid(*(colliding_items[i])) == typeid (Centipede_Segment)) {
-            qDebug() << "COLLISION";
-            emit endGame();
+            if(this->lives == 0)
+                emit endGame();
+            else
+            {
+                this->lives--;
+                this->setPos(450,660);
+            }
         }
+    }
+}
+
+void Blaster::checkScore()
+{
+    //converted score: score - n*NEW_LIFE_SCORE, where n = interval
+    //(n=0:(0,12000), n=1:(12000,24000),...)
+    long converted_score = (game->score->getScore()) - score_int_idx*NEW_LIFE_SCORE;
+    qDebug() << this->lives;
+    if(converted_score > NEW_LIFE_SCORE)
+    {
+        score_int_idx++;
+        this->lives++;
     }
 }

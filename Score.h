@@ -8,6 +8,7 @@ class Score{
 public:
     Score(QGraphicsScene *);
     QGraphicsTextItem* scoreText;
+    long getScore();
     void tailIncrease(); // increase when tail is shot
     void headIncrease(); // increase when head it shot
     void mushIncrease(); // increase when mushroom destroyed

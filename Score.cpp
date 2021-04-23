@@ -12,6 +12,11 @@ Score::Score(QGraphicsScene *scene){
     scene->addItem(scoreText);
 }
 
+long Score::getScore()
+{
+    return this->score;
+}
+
 void Score::tailIncrease()
 {
     score += 10;

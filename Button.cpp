@@ -6,7 +6,7 @@
 // Creates button with given text
 Button::Button(QString string, QGraphicsItem *parent): QGraphicsRectItem(parent){
 
-    setRect(0,0,250 ,75);
+    setRect(0,0,250,75);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(Qt::darkGreen);
