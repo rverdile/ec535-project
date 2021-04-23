@@ -75,11 +75,14 @@ void Blaster::collisionCheck()
     // Check for collision with centipede
     for (int i = 0, n = colliding_items.size(); i < n; i++) {
         if (typeid(*(colliding_items[i])) == typeid (Centipede_Segment)) {
-            if(this->lives == 0)
+            if(lives == 0 && isInvulnerable == 0)
                 emit endGame();
-            else
+            else if(lives > 0)
             {
-                this->lives--;
+                lives--;
+                isInvulnerable = 1;
+                setPixmap(QPixmap(":/images/images/shielded_blaster.png"));
+                QTimer::singleShot(TIME_INVULNERABLE,this,SLOT(endInvulnerability()));
                 this->setPos(450,660);
             }
         }
@@ -95,6 +98,12 @@ void Blaster::checkScore()
     if(converted_score > NEW_LIFE_SCORE)
     {
         score_int_idx++;
-        this->lives++;
+        lives++;
     }
+}
+
+void Blaster::endInvulnerability()
+{
+    isInvulnerable = 0;
+    setPixmap(QPixmap(":/images/images/blaster.png"));
 }

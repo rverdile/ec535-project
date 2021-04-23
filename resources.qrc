@@ -1,6 +1,7 @@
 <RCC>
     <qresource prefix="/images">
         <file>images/blaster.png</file>
+        <file>images/shielded_blaster.png</file>
         <file>images/body.jpg</file>
         <file>images/dart.png</file>
         <file>images/head_rev.jpg</file>

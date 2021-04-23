@@ -10,6 +10,7 @@
 #include "Mushroom.h"
 
 #define NEW_LIFE_SCORE 100
+#define TIME_INVULNERABLE 2000 //ms
 
 class Blaster: public QObject,public QGraphicsPixmapItem{
     Q_OBJECT
@@ -19,6 +20,7 @@ public:
 public slots:
     void collisionCheck();
     void checkScore();
+    void endInvulnerability();
 signals:
     void endGame();
 private:
@@ -27,6 +29,7 @@ private:
     int mov_y = 0;
     int lives = 0;
     int score_int_idx = 0;
+    int isInvulnerable = 0;
     Centipedes *centipedes;
     MushroomField * mushroom_field;
 };
