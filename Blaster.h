@@ -15,8 +15,9 @@
 class Blaster: public QObject,public QGraphicsPixmapItem{
     Q_OBJECT
 public:
-    Blaster(Centipedes *, MushroomField *);
+    Blaster(Centipedes *, MushroomField *, QGraphicsScene * myscene);
     void keyPressEvent(QKeyEvent * event);
+    QGraphicsTextItem* livesText;
 public slots:
     void collisionCheck();
     void checkScore();
@@ -32,6 +33,8 @@ private:
     int isInvulnerable = 0;
     Centipedes *centipedes;
     MushroomField * mushroom_field;
+    QGraphicsScene * myscene;
+    void placeLivesText();
 };
 
 

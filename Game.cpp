@@ -195,10 +195,11 @@ void Game::start()
     centipedes = new Centipedes(scene, mushrooms);
 
     // Create blaster
-    blaster = new Blaster(centipedes, mushrooms);
+    blaster = new Blaster(centipedes, mushrooms, scene);
     blaster->setFlag(QGraphicsItem::ItemIsFocusable);
     blaster->setFocus();
     scene->addItem(blaster);
+    scene->addItem(blaster->livesText);
     blaster->setPos(450,660);
 
     // Connect Blaster/Centipede collision to endgame

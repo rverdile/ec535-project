@@ -9,10 +9,11 @@
 
 extern Game * game;
 
-Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field)
+Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field, QGraphicsScene * myscene)
 {
     this->centipedes = centipedes;
     this->mushroom_field = mushroom_field;
+    this->myscene = myscene;
     setPixmap(QPixmap(":/images/images/blaster.png"));
 
     // connects timeout() function of timer to collisionCheck slot of blaster
@@ -23,6 +24,9 @@ Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field)
     // connect checkScore timer
     connect(timer,SIGNAL(timeout()),this,SLOT(checkScore()));
     timer->start(5); // 5ms
+
+    placeLivesText();
+
 }
 
 void Blaster::keyPressEvent(QKeyEvent *event)
@@ -80,6 +84,8 @@ void Blaster::collisionCheck()
             else if(lives > 0)
             {
                 lives--;
+                myscene->removeItem(livesText);
+                placeLivesText();
                 isInvulnerable = 1;
                 setPixmap(QPixmap(":/images/images/shielded_blaster.png"));
                 QTimer::singleShot(TIME_INVULNERABLE,this,SLOT(endInvulnerability()));
@@ -94,11 +100,14 @@ void Blaster::checkScore()
     //converted score: score - n*NEW_LIFE_SCORE, where n = interval
     //(n=0:(0,12000), n=1:(12000,24000),...)
     long converted_score = (game->score->getScore()) - score_int_idx*NEW_LIFE_SCORE;
-    qDebug() << this->lives;
+
     if(converted_score > NEW_LIFE_SCORE)
     {
         score_int_idx++;
         lives++;
+
+        myscene->removeItem(livesText);
+        placeLivesText();
     }
 }
 
@@ -106,4 +115,14 @@ void Blaster::endInvulnerability()
 {
     isInvulnerable = 0;
     setPixmap(QPixmap(":/images/images/blaster.png"));
+}
+
+void Blaster::placeLivesText()
+{
+    livesText = new QGraphicsTextItem(QString("LIVES: ") +  QString::number(lives));
+    livesText->setDefaultTextColor(Qt::white);
+    QFont titleFont("Bauhaus 93",20);
+    livesText->setFont(titleFont);
+    livesText->setPos(650,0);
+    myscene->addItem(livesText);
 }
