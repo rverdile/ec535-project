@@ -49,6 +49,7 @@ class Centipedes: public QObject {
 
 public:
     Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field);
+    int getCentipedesSize();
     ~Centipedes();
 public slots:
     void collision_check();

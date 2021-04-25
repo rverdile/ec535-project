@@ -269,6 +269,11 @@ Centipedes::Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field)
     this->scene = scene;
 }
 
+int Centipedes::getCentipedesSize()
+{
+    return centipedes.size();
+}
+
 
 // TO-DO: pretty sure calling this will crash it
 Centipedes::~Centipedes()

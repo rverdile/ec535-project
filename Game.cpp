@@ -221,7 +221,7 @@ void Game::start()
 void Game::nextLevel()
 {
 
-    if (centipedes == nullptr)
+    if (centipedes->getCentipedesSize() == 0)
     {
         delete centipedes;
         centipedes = new Centipedes(scene, mushrooms);
