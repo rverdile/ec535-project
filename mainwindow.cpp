@@ -15,6 +15,9 @@ MainWindow::MainWindow(QWidget *parent)
     game = new Game();
     setCentralWidget(game);
     game->show();
+
+    // Rotate for touchscreen
+    game->rotate(270);
 }
 
 MainWindow::~MainWindow()

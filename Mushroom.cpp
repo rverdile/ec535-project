@@ -56,57 +56,57 @@ void Mushroom::getMushroomImage()
     {
         if(health == 4)
         {
-            setPixmap(QPixmap(":/images/images/purple_mush_4hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/purple_mush_4hp.png"));
         }
         else if(health == 3)
         {
-            setPixmap(QPixmap(":/images/images/purple_mush_3hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/purple_mush_3hp.png"));
         }
         else if(health == 2)
         {
-            setPixmap(QPixmap(":/images/images/purple_mush_2hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/purple_mush_2hp.png"));
         }
         else if(health == 1)
         {
-            setPixmap(QPixmap(":/images/images/purple_mush_1hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/purple_mush_1hp.png"));
         }
     }
     else if(mush_id == 2)
     {
         if(health == 4)
         {
-            setPixmap(QPixmap(":/images/images/green_mush_4hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/green_mush_4hp.png"));
         }
         else if(health == 3)
         {
-            setPixmap(QPixmap(":/images/images/green_mush_3hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/green_mush_3hp.png"));
         }
         else if(health == 2)
         {
-            setPixmap(QPixmap(":/images/images/green_mush_2hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/green_mush_2hp.png"));
         }
         else if(health == 1)
         {
-            setPixmap(QPixmap(":/images/images/green_mush_1hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/green_mush_1hp.png"));
         }
     }
     else if(mush_id == 3)
     {
         if(health == 4)
         {
-            setPixmap(QPixmap(":/images/images/red_mush_4hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/red_mush_4hp.png"));
         }
         else if(health == 3)
         {
-            setPixmap(QPixmap(":/images/images/red_mush_3hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/red_mush_3hp.png"));
         }
         else if(health == 2)
         {
-            setPixmap(QPixmap(":/images/images/red_mush_2hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/red_mush_2hp.png"));
         }
         else if(health == 1)
         {
-            setPixmap(QPixmap(":/images/images/red_mush_1hp_25x25.png"));
+            setPixmap(QPixmap(":/images/images/red_mush_1hp.png"));
         }
     }
 }
@@ -121,21 +121,21 @@ MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
 
     for(int i = 0; i < num_mushrooms; i++) {
 
-        int x_rand = rand() % FIELD_W/25;
-        int y_rand = rand() % FIELD_H/25;
+        int x_rand = rand() % FIELD_W/16;
+        int y_rand = rand() % FIELD_H/16;
 
         binary_field[x_rand][y_rand] = 1;
 
     }
 
-    for(int i = 0; i < FIELD_W/25; i++)
+    for(int i = 0; i < FIELD_W/16; i++)
     {
-        for(int j = 0; j < FIELD_H/25; j++)
+        for(int j = 0; j < FIELD_H/16; j++)
         {
             if(binary_field[i][j])
             {
                 Mushroom * mushroom = new Mushroom();
-                mushroom->setPos(i*25,50+j*25);
+                mushroom->setPos(i*16,32+j*16);
                 mushroom_field.push_back(mushroom);
             }
         }
@@ -155,9 +155,11 @@ void MushroomField::dartCollision()
             if (mushroom_field[i]->decrementHealth()) {
 
                 // Remove from binary field if mushroom is gone
-                int x = mushroom_field[i]->x()/25;
-                int y = mushroom_field[i]->y()/25;
-                binary_field[x][y] = 0;
+                int x = mushroom_field[i]->x()/16;
+                int y = mushroom_field[i]->y()/16;
+                binary_field[x][y-2] = 0;
+
+                //qDebug() << "Mushroom deleted: " << x << y-2;
             }
         }
     }
@@ -165,14 +167,14 @@ void MushroomField::dartCollision()
 
 void MushroomField::drawField()
 {
-    for(int i = 0; i < FIELD_W/25; i++)
+    for(int i = 0; i < FIELD_W/16; i++)
     {
-        for(int j = 0; j < FIELD_H/25; j++)
+        for(int j = 0; j < FIELD_H/16; j++)
         {
             if(binary_field[i][j])
             {
                 Mushroom * mushroom = new Mushroom();
-                mushroom->setPos(i*25,50+j*25);
+                mushroom->setPos(i*16,32+j*16);
                 mushroom_field.push_back(mushroom);
                 myscene->addItem(mushroom);
 
@@ -184,9 +186,9 @@ void MushroomField::drawField()
 void MushroomField::addMushrooms(int num)
 {
     // Clear out binary field in blaster area
-    for(int i = 0; i < FIELD_W/25; i++)
+    for(int i = 0; i < FIELD_W/16; i++)
     {
-        for(int j = FIELD_H/25; j < FULL_H/25; j++)
+        for(int j = FIELD_H/16; j < FULL_H/16; j++)
         {
             binary_field[i][j] = 0;
         }
@@ -196,21 +198,21 @@ void MushroomField::addMushrooms(int num)
 
     for(int i = 0; i < num; i++) {
 
-        int x_rand = rand() % FIELD_W/25;
-        int y_rand = rand() % FIELD_H/25;
+        int x_rand = rand() % FIELD_W/16;
+        int y_rand = rand() % FIELD_H/16;
 
         binary_field[x_rand][y_rand] = 1;
 
     }
 
-    for(int i = 0; i < FIELD_W/25; i++)
+    for(int i = 0; i < FIELD_W/16; i++)
     {
-        for(int j = 0; j < FIELD_H/25; j++)
+        for(int j = 0; j < FIELD_H/16; j++)
         {
             if(binary_field[i][j])
             {
                 Mushroom * mushroom = new Mushroom();
-                mushroom->setPos(i*25,50+j*25);
+                mushroom->setPos(i*16,32+j*16);
                 mushroom_field.push_back(mushroom);
                 myscene->addItem(mushroom);
 

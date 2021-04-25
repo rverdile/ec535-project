@@ -10,8 +10,8 @@
 #include "Mushroom.h"
 #include "Score.h"
 
-#define SCENE_W 800
-#define SCENE_H 600
+#define SCENE_H 480
+#define SCENE_W 272
 
 class Game : public QGraphicsView
 {
