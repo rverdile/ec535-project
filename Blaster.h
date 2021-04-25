@@ -9,7 +9,7 @@
 #include "Centipede.h"
 #include "Mushroom.h"
 
-#define NEW_LIFE_SCORE 100
+#define NEW_LIFE_SCORE 500
 #define TIME_INVULNERABLE 2000 //ms
 
 class Blaster: public QObject,public QGraphicsPixmapItem{

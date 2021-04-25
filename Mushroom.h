@@ -29,6 +29,7 @@ public:
     std::vector<Mushroom *> mushroom_field;
     int binary_field[FULL_W/25][FULL_H/25] = {};
     void drawField();
+    void addMushrooms(int num);
     void nextMushroom();
 public slots:
     void dartCollision();

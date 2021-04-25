@@ -187,6 +187,39 @@ void MushroomField::drawField()
     }
 }
 
+void MushroomField::addMushrooms(int num)
+{
+    srand((unsigned) time(NULL));
+
+    for(int i = 0; i < num; i++) {
+
+        int x_rand = rand() % FIELD_W/25;
+        int y_rand = rand() % FIELD_H/25;
+
+        binary_field[x_rand][y_rand] = 1;
+
+    }
+
+    for(int i = 0; i < FIELD_W/25; i++)
+    {
+        for(int j = 0; j < FIELD_H/25; j++)
+        {
+            if(binary_field[i][j])
+            {
+                Mushroom * mushroom = new Mushroom();
+                mushroom->setPos(i*25,50+j*25);
+                mushroom_field.push_back(mushroom);
+
+            }
+        }
+    }
+
+    for(size_t i = 0; i < mushroom_field.size(); i++) {
+        myscene->addItem(mushroom_field[i]);
+    }
+
+}
+
 void MushroomField::nextMushroom()
 {
     if(mush_id == 1)

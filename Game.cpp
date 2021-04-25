@@ -11,8 +11,6 @@
 
 #include "QtDebug"
 
-//int num_mushrooms = 50;
-
 Game::Game(QWidget *parent)
 {
     showMainMenu();
@@ -212,10 +210,8 @@ void Game::start()
     score = new Score(scene);
     scene->addItem(score->scoreText);
 
-    // connect
-    QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
-
     // check if centipede is killed
+    QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
     connect(timer,SIGNAL(timeout()),this,SLOT(nextLevel()));
     timer->start(20); // 20ms
 
@@ -237,6 +233,7 @@ void Game::nextLevel()
                 scene->removeItem(mushrooms->mushroom_field[i]);
             }
           mushrooms->nextMushroom();
+          mushrooms->addMushrooms(5);
           mushrooms->drawField();
         }
     }
