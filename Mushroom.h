@@ -5,10 +5,10 @@
 #include <QObject>
 #include <QGraphicsItem>
 
-#define FIELD_W 800
-#define FIELD_H 500
-#define FULL_W 800
-#define FULL_H 700
+#define FIELD_W 272
+#define FIELD_H 400
+#define FULL_W 272
+#define FULL_H 480
 
 class Mushroom: public QObject,public QGraphicsPixmapItem{
     Q_OBJECT
@@ -27,7 +27,7 @@ class MushroomField: public QObject, QGraphicsPixmapItem{
 public:
     MushroomField(int num_mushrooms, QGraphicsScene * myscene);
     std::vector<Mushroom *> mushroom_field;
-    int binary_field[FULL_W/25][FULL_H/25] = {};
+    int binary_field[FULL_W/16][FULL_H/16] = {};
     void drawField();
     void addMushrooms(int num);
     void nextMushroom();

@@ -6,10 +6,6 @@
         <file>images/dart.png</file>
         <file>images/head_rev.jpg</file>
         <file>images/head.jpg</file>
-        <file>images/mushroom_4hp.png</file>
-        <file>images/mushroom_3hp.png</file>
-        <file>images/mushroom_2hp.png</file>
-        <file>images/mushroom_1hp.png</file>
         <file>images/purple_mush_4hp_25x25.png</file>
         <file>images/purple_mush_3hp_25x25.png</file>
         <file>images/purple_mush_2hp_25x25.png</file>
@@ -22,5 +18,22 @@
         <file>images/green_mush_3hp_25x25.png</file>
         <file>images/green_mush_2hp_25x25.png</file>
         <file>images/green_mush_1hp_25x25.png</file>
+        <file>images/green_mush_1hp.png</file>
+        <file>images/green_mush_2hp.png</file>
+        <file>images/green_mush_3hp.png</file>
+        <file>images/green_mush_4hp.png</file>
+        <file>images/red_mush_1hp.png</file>
+        <file>images/red_mush_2hp.png</file>
+        <file>images/red_mush_3hp.png</file>
+        <file>images/red_mush_4hp.png</file>
+        <file>images/purple_mush_1hp.png</file>
+        <file>images/purple_mush_2hp.png</file>
+        <file>images/purple_mush_3hp.png</file>
+        <file>images/purple_mush_4hp.png</file>
+        <file>images/centipede.png</file>
+        <file>images/howToPlay.png</file>
+        <file>images/score.png</file>
+        <file>images/lives.png</file>
+        <file>images/gameOver.png</file>
     </qresource>
 </RCC>

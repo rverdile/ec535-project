@@ -6,6 +6,7 @@
 #include "Dart.h"
 #include "Mushroom.h"
 #include "Game.h"
+#include "Bauhaus.h"
 
 extern Game * game;
 
@@ -41,20 +42,20 @@ void Blaster::keyPressEvent(QKeyEvent *event)
         }
     }
     else if(event->key() == Qt::Key_Right) {
-        if(pos().x()+32 < 800)
+        if(pos().x()+20 < 272)
         {
             mov_x += speed;
         }
     }
     if(event->key() == Qt::Key_Up) {
 
-        if(pos().y() > 550)
+        if(pos().y()-speed > 432)
         {
             mov_y -= speed;
         }
     }
     else if(event->key() == Qt::Key_Down) {
-        if(pos().y()+32 < 700)
+        if(pos().y()+20 < 480)
         {
             mov_y += speed;
         }
@@ -89,7 +90,7 @@ void Blaster::collisionCheck()
                 isInvulnerable = 1;
                 setPixmap(QPixmap(":/images/images/shielded_blaster.png"));
                 QTimer::singleShot(TIME_INVULNERABLE,this,SLOT(endInvulnerability()));
-                this->setPos(450,660);
+                this->setPos(SCENE_W/2-10,460);
             }
         }
     }
@@ -119,10 +120,15 @@ void Blaster::endInvulnerability()
 
 void Blaster::placeLivesText()
 {
-    livesText = new QGraphicsTextItem(QString("LIVES: ") +  QString::number(lives));
+    Bauhaus *livesLabel = new Bauhaus("lives");
+    livesLabel->setPos(FULL_W-100,5);
+    myscene->addItem(livesLabel);
+
+    livesText = new QGraphicsTextItem(QString::number(lives));
     livesText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Bauhaus 93",20);
+    QFont titleFont("Helvetica",14);
+    titleFont.setBold(true);
     livesText->setFont(titleFont);
-    livesText->setPos(650,0);
+    livesText->setPos(FULL_W - 32,2);
     myscene->addItem(livesText);
 }

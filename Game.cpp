@@ -6,6 +6,7 @@
 #include "Mushroom.h"
 #include "Button.h"
 #include "Dart.h"
+#include "Bauhaus.h"
 #include "QTextBlockFormat"
 #include "QTextCursor"
 
@@ -19,36 +20,31 @@ Game::Game(QWidget *parent)
 void Game::showMainMenu()
 {
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,800,700);
+    scene->setSceneRect(0,0,SCENE_W,SCENE_H);
     setScene(scene);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(800,700);
+    setFixedSize(SCENE_H,SCENE_W);
     scene->setBackgroundBrush(Qt::black);
 
     // Create the title
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Centipede"));
-    titleText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Bauhaus 93",50);
-    titleText->setFont(titleFont);
-    int x = this->width()/2 - titleText->boundingRect().width()/2;
-    int y = 150;
-    titleText->setPos(x,y);
-    scene->addItem(titleText);
+    Bauhaus *title = new Bauhaus("centipede");
+    title->setPos(36,115);
+    scene->addItem(title);
 
     // Create the play button
     Button* playButton = new Button(QString("Play"));
-    x = this->width()/2 - playButton->boundingRect().width()/2;
-    y = 350;
+    int x = SCENE_W/2 - playButton->boundingRect().width()/2;
+    int y = 225;
     playButton->setPos(x,y);
     connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
     scene->addItem(playButton);
 
     // Create the How To Play button
     Button* howButton = new Button(QString("How to Play"));
-    x = this->width()/2 - howButton->boundingRect().width()/2;
-    y = 450;
-    qDebug() << x << y;
+    x = SCENE_W/2 - howButton->boundingRect().width()/2;
+    y = 300;
+//    qDebug() << x << y;
     howButton->setPos(x,y);
     connect(howButton,SIGNAL(clicked()),this,SLOT(showHowToPlay()));
     scene->addItem(howButton);
@@ -56,23 +52,15 @@ void Game::showMainMenu()
 
 void Game::showHowToPlay()
 {
-    qDebug() << "here";
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,800,700);
     setScene(scene);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(800,700);
+    scene->setSceneRect(0,0,SCENE_W,SCENE_H);
     scene->setBackgroundBrush(Qt::black);
 
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("How To Play"));
-    titleText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Bauhaus 93",30);
-    titleText->setFont(titleFont);
-    int x = this->width()/2 - titleText->boundingRect().width()/2;
-    int y = 80;
-    titleText->setPos(x,y);
-    scene->addItem(titleText);
+    // Create the title
+    Bauhaus *title = new Bauhaus("howToPlay");
+    title->setPos(36,10);
+    scene->addItem(title);
 
     QTextBlockFormat format;
     format.setAlignment(Qt::AlignCenter);
@@ -80,15 +68,15 @@ void Game::showHowToPlay()
                     "all of the centipede's body segments by shooting them. You control the blaster at the bottom of the screen. Use the arrow keys to move the blaster around and space to shoot a dart. "
                     "Shooting a centipede segment will turn it into a mushroom. Shooting a centipede's body segment will split the centipede in two. "
                     "A centipede's head is worth 100 points, and body segments are worth 10. Mushrooms take 4 hits to eliminate and are worth 1 point. "
-                    "Beat the game by completely eliminating the centipede before it gets to the bottom of the screen.");
+                    "The game is over if a centipede reaches the bottom of the screen or collides with the blaster.");
 
     QGraphicsTextItem *instrText = new QGraphicsTextItem(instr);
     instrText->setDefaultTextColor(Qt::white);
-    instrText->setTextWidth(this->width()/4*3);
-    QFont textFont("Helvetica", 10);
+    instrText->setTextWidth(SCENE_W/5*4);
+    QFont textFont("Helvetica", 9);
     instrText->setFont(textFont);
-    x = this->width()/2 - instrText->boundingRect().width()/2;
-    y = 180;
+    int x = SCENE_W/2 - instrText->boundingRect().width()/2;
+    int y = 60;
     instrText->setPos(x,y);
     QTextCursor cursor = instrText->textCursor();
     cursor.select(QTextCursor::Document);
@@ -99,9 +87,9 @@ void Game::showHowToPlay()
 
 
     // Return to main menu
-    Button* menuButton = new Button(QString("Return to Main Menu"));
-    x = this->width()/2 - menuButton->boundingRect().width()/2;
-    y = 500;
+    Button* menuButton = new Button(QString("Main Menu"));
+    x = SCENE_W/2 - menuButton->boundingRect().width()/2;
+    y = 410;
     menuButton->setPos(x,y);
     connect(menuButton,SIGNAL(clicked()),this,SLOT(showMainMenu()));
     scene->addItem(menuButton);
@@ -109,7 +97,7 @@ void Game::showHowToPlay()
 
 void Game::showGameEnd()
 {
-    qDebug() << "IN END";
+    //qDebug() << "IN END";
     // Stop timer
     timer->stop();
     centipedes->stop();
@@ -118,35 +106,27 @@ void Game::showGameEnd()
     this->removeItems();
 
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,800,700);
     setScene(scene);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(800,700);
+    scene->setSceneRect(0,0,SCENE_W,SCENE_H);
     scene->setBackgroundBrush(Qt::black);
 
     // Create the title
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Game Over!"));
-    titleText->setDefaultTextColor(Qt::white);
-    QFont titleFont("Bauhaus 93",50);
-    titleText->setFont(titleFont);
-    int x = this->width()/2 - titleText->boundingRect().width()/2;
-    int y = 150;
-    titleText->setPos(x,y);
-    scene->addItem(titleText);
+    Bauhaus *title = new Bauhaus("gameOver");
+    title->setPos(36,115);
+    scene->addItem(title);
 
     // Create the play button
     Button* playButton = new Button(QString("Play Again"));
-    x = this->width()/2 - playButton->boundingRect().width()/2;
-    y = 350;
+    int x = SCENE_W/2 - playButton->boundingRect().width()/2;
+    int y = 225;
     playButton->setPos(x,y);
     connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
     scene->addItem(playButton);
 
     // Create the Exit button
-    Button* exitButton = new Button(QString("Return to Main Menu"));
-    x = this->width()/2 - exitButton->boundingRect().width()/2;
-    y = 450;
+    Button* exitButton = new Button(QString("Main Menu"));
+    x = SCENE_W/2 - exitButton->boundingRect().width()/2;
+    y = 300;
     exitButton->setPos(x,y);
     connect(exitButton,SIGNAL(clicked()),this,SLOT(showMainMenu()));
     scene->addItem(exitButton);
@@ -186,15 +166,12 @@ void Game::start()
 {
     // Set up scene
     scene = new QGraphicsScene();
-    scene->setSceneRect(0,0,800,700);
+    scene->setSceneRect(0,0,SCENE_W,SCENE_H);
     setScene(scene);
-    setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
-    setFixedSize(800,700);
     scene->setBackgroundBrush(Qt::black);
 
     // Create mushroom field
-    int num_mushrooms = 50;
+    int num_mushrooms = 25;
     mushrooms = new MushroomField(num_mushrooms,scene);
 
     // Create centipede
@@ -206,7 +183,7 @@ void Game::start()
     blaster->setFocus();
     scene->addItem(blaster);
     scene->addItem(blaster->livesText);
-    blaster->setPos(450,660);
+    blaster->setPos(SCENE_W/2-10,460);
 
     // Connect Blaster/Centipede collision to endgame
     connect(blaster,SIGNAL(endGame()),this,SLOT(showGameEnd()));

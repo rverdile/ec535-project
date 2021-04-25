@@ -25,7 +25,7 @@ public slots:
 signals:
     void endGame();
 private:
-    int speed = 15;
+    int speed = 9;
     int mov_x = 0;
     int mov_y = 0;
     int lives = 0;
