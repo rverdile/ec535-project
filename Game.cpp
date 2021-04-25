@@ -1,4 +1,5 @@
 #include <QApplication>
+#include <QTimer>
 #include "Game.h"
 #include "Centipede.h"
 #include "Blaster.h"
@@ -211,13 +212,12 @@ void Game::start()
     score = new Score(scene);
     scene->addItem(score->scoreText);
 
-    // Create the play button
-    Button* nextLevel = new Button(QString("Change Mushrooms"));
-    int x = this->width()/2 - nextLevel->boundingRect().width()/2;
-    int y = 350;
-    nextLevel->setPos(x,y);
-    connect(nextLevel,SIGNAL(clicked()),this,SLOT(nextLevel()));
-    scene->addItem(nextLevel);
+    // connect
+    QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
+
+    // check if centipede is killed
+    connect(timer,SIGNAL(timeout()),this,SLOT(nextLevel()));
+    timer->start(20); // 20ms
 
     show();
 }
@@ -229,16 +229,16 @@ void Game::nextLevel()
     {
         delete centipedes;
         centipedes = new Centipedes(scene, mushrooms);
-    }
 
-    if (mushrooms != nullptr)
-    {
-        for(size_t i = 0; i < mushrooms->mushroom_field.size(); i++)
+        if (mushrooms != nullptr)
         {
-            scene->removeItem(mushrooms->mushroom_field[i]);
+            for(size_t i = 0; i < mushrooms->mushroom_field.size(); i++)
+            {
+                scene->removeItem(mushrooms->mushroom_field[i]);
+            }
+          mushrooms->nextMushroom();
+          mushrooms->drawField();
         }
-      mushrooms->nextMushroom();
-      mushrooms->drawField();
     }
 }
 
