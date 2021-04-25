@@ -10,8 +10,8 @@
 #include "Mushroom.h"
 #include "Score.h"
 
-#define SCENE_W 800;
-#define SCENE_H 600;
+#define SCENE_W 800
+#define SCENE_H 600
 
 class Game : public QGraphicsView
 {
@@ -20,13 +20,14 @@ public:
     Game(QWidget * parent=0);
     ~Game();
     Score * score = nullptr;
+    Centipedes *centipedes = nullptr;
 private:
     QGraphicsScene * scene = nullptr;
-    Centipedes *centipedes = nullptr;
     Blaster *blaster = nullptr;
     MushroomField *mushrooms = nullptr;
     int mushroom_color = 0;
     void removeItems();
+    QTimer * timer;
 public slots:
     void start();
     void nextLevel();

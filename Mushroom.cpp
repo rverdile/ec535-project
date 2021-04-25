@@ -52,8 +52,6 @@ bool Mushroom::is_shot()
 
 void Mushroom::getMushroomImage()
 {
-    qDebug() << "here";
-
     if(mush_id == 1)
     {
         if(health == 4)
@@ -115,7 +113,7 @@ void Mushroom::getMushroomImage()
 
 MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
 {
-
+    mush_id = 1;
     this->num_mushrooms = num_mushrooms;
     this->myscene = myscene;
 
@@ -139,7 +137,6 @@ MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
                 Mushroom * mushroom = new Mushroom();
                 mushroom->setPos(i*25,50+j*25);
                 mushroom_field.push_back(mushroom);
-
             }
         }
     }
@@ -177,18 +174,24 @@ void MushroomField::drawField()
                 Mushroom * mushroom = new Mushroom();
                 mushroom->setPos(i*25,50+j*25);
                 mushroom_field.push_back(mushroom);
+                myscene->addItem(mushroom);
 
             }
         }
-    }
-
-    for(size_t i = 0; i < mushroom_field.size(); i++) {
-        myscene->addItem(mushroom_field[i]);
     }
 }
 
 void MushroomField::addMushrooms(int num)
 {
+    // Clear out binary field in blaster area
+    for(int i = 0; i < FIELD_W/25; i++)
+    {
+        for(int j = FIELD_H/25; j < FULL_H/25; j++)
+        {
+            binary_field[i][j] = 0;
+        }
+    }
+
     srand((unsigned) time(NULL));
 
     for(int i = 0; i < num; i++) {
@@ -209,15 +212,11 @@ void MushroomField::addMushrooms(int num)
                 Mushroom * mushroom = new Mushroom();
                 mushroom->setPos(i*25,50+j*25);
                 mushroom_field.push_back(mushroom);
+                myscene->addItem(mushroom);
 
             }
         }
     }
-
-    for(size_t i = 0; i < mushroom_field.size(); i++) {
-        myscene->addItem(mushroom_field[i]);
-    }
-
 }
 
 void MushroomField::nextMushroom()

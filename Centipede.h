@@ -34,12 +34,15 @@ public:
     int speed;
     void start(int speed);
     void update_speed(int speed);
+    bool is_Gone();
+    QTimer * timer;
 public slots:
     void move();
+signals:
+    void endGame_OffScreen();
 private:
     MushroomField *mushroom_field;
     bool mushroom_collision(Centipede_Segment *segment);
-    QTimer * timer;
 };
 
 
@@ -51,6 +54,7 @@ public:
     Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field);
     int getCentipedesSize();
     ~Centipedes();
+    void stop();
 public slots:
     void collision_check();
 private:

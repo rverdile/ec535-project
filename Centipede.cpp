@@ -18,6 +18,8 @@ int counter = 0;
 // Create a centipede and start movement timer
 Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomField *mushroom_field)
 {
+    QObject::connect(this, &Centipede::endGame_OffScreen, game, &Game::showGameEnd);
+
     this->mushroom_field = mushroom_field;
     this->speed = speed;
 
@@ -53,6 +55,7 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomF
 Centipede::Centipede(MushroomField *mushroom_field)
 {
     this->mushroom_field = mushroom_field;
+    QObject::connect(this, &Centipede::endGame_OffScreen, game, &Game::showGameEnd);
 }
 
 Centipede::~Centipede()
@@ -94,10 +97,32 @@ void Centipede::update_speed(int speed)
     qDebug() << "Speed: " << speed;
 }
 
+bool Centipede::is_Gone()
+{
+    int x = segments[length-1]->x();
+    int y = segments[length-1]->y();
+
+    qDebug() << "IS GONE? " << x << y;
+    if (y == FULL_H) {
+        if (x == 0 || x >= SCENE_W - 25) {
+            qDebug() << "Centipede is gone";
+            return true;
+        }
+    }
+    return false;
+}
+
+
 // Move the centipede
 void Centipede::move()
 {    
     bool turn_around = false;
+
+    // Check if centipede has reached bottom of screen
+    if (is_Gone()) {
+        emit endGame_OffScreen();
+        return;
+    }
 
     // Check if head is about to hit mushroom
     if (mushroom_collision(segments[length-1])) {
@@ -275,15 +300,23 @@ int Centipedes::getCentipedesSize()
 }
 
 
-// TO-DO: pretty sure calling this will crash it
 Centipedes::~Centipedes()
 {
     int length = centipedes.size();
     for (int i = length - 1; i >= 0; i--) {
-        delete centipedes.back();
         centipedes.pop_back();
     }
 }
+
+void Centipedes::stop()
+{
+    int n = (int)centipedes.size();
+    for (int i = n - 1; i >= 0; i--) {
+        centipedes[i]->timer->stop();
+        centipedes.pop_back();
+    }
+}
+
 
 // Checks all centipedes for collision with dart
 // and adjusts centipede accordingly

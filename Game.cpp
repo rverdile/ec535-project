@@ -109,6 +109,11 @@ void Game::showHowToPlay()
 
 void Game::showGameEnd()
 {
+    qDebug() << "IN END";
+    // Stop timer
+    timer->stop();
+    centipedes->stop();
+
     // remove items
     this->removeItems();
 
@@ -121,7 +126,7 @@ void Game::showGameEnd()
     scene->setBackgroundBrush(Qt::black);
 
     // Create the title
-    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("You Died!"));
+    QGraphicsTextItem* titleText = new QGraphicsTextItem(QString("Game Over!"));
     titleText->setDefaultTextColor(Qt::white);
     QFont titleFont("Bauhaus 93",50);
     titleText->setFont(titleFont);
@@ -139,30 +144,30 @@ void Game::showGameEnd()
     scene->addItem(playButton);
 
     // Create the Exit button
-    Button* exitButton = new Button(QString("Exit"));
+    Button* exitButton = new Button(QString("Return to Main Menu"));
     x = this->width()/2 - exitButton->boundingRect().width()/2;
     y = 450;
     exitButton->setPos(x,y);
-    connect(exitButton,SIGNAL(clicked()),this,SLOT(closeGame()));
+    connect(exitButton,SIGNAL(clicked()),this,SLOT(showMainMenu()));
     scene->addItem(exitButton);
 }
 
 void Game::closeGame()
 {
-    qApp->exit(); // this isn't exiting gracefully it's crashing
+    qApp->exit();
     //this->~Game();
 }
 
 Game::~Game()
 {
-    if (centipedes != nullptr)
-        delete centipedes;
-    if (blaster != nullptr)
-        delete blaster;
-    if (scene != nullptr)
-        delete scene;
-    if (mushrooms != nullptr)
-        delete mushrooms;
+//    if (centipedes != nullptr)
+//        delete centipedes;
+//    if (blaster != nullptr)
+//        delete blaster;
+//    if (scene != nullptr)
+//        delete scene;
+//    if (mushrooms != nullptr)
+//        delete mushrooms;
 }
 
 void Game::removeItems()
@@ -211,7 +216,7 @@ void Game::start()
     scene->addItem(score->scoreText);
 
     // check if centipede is killed
-    QTimer * timer = new QTimer(); // every time it goes to 0, signal will execute
+    timer = new QTimer(); // every time it goes to 0, signal will execute
     connect(timer,SIGNAL(timeout()),this,SLOT(nextLevel()));
     timer->start(20); // 20ms
 
@@ -220,17 +225,27 @@ void Game::start()
 
 void Game::nextLevel()
 {
+    bool flag = true;
+    QList<QGraphicsItem *> items = scene->items();
+    for (int i = 0; i < (int)items.size(); i++) {
+        if (typeid(*(items[i])) == typeid(Centipede_Segment)) {
+            flag = false;
+            break;
+        }
+    }
 
-    if (centipedes->getCentipedesSize() == 0)
+    if (centipedes->getCentipedesSize() == 0 || flag)
     {
         delete centipedes;
         centipedes = new Centipedes(scene, mushrooms);
 
         if (mushrooms != nullptr)
         {
-            for(size_t i = 0; i < mushrooms->mushroom_field.size(); i++)
+            int n = (int)mushrooms->mushroom_field.size();
+            for(int i = 0; i < n; i++)
             {
                 scene->removeItem(mushrooms->mushroom_field[i]);
+                mushrooms->mushroom_field.pop_back();
             }
           mushrooms->nextMushroom();
           mushrooms->addMushrooms(5);

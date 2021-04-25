@@ -63,7 +63,7 @@ void Blaster::keyPressEvent(QKeyEvent *event)
     {
         //create a dart
         Dart * dart = new Dart();
-        QObject::connect(dart, &Dart::collision, centipedes, &Centipedes::collision_check);
+        QObject::connect(dart, &Dart::collision, game->centipedes, &Centipedes::collision_check);
         QObject::connect(dart, &Dart::mushroomCollision, mushroom_field, &MushroomField::dartCollision);
         dart->setPos(x(),y());
         scene()->addItem(dart);
