@@ -19,6 +19,7 @@ public:
     bool is_shot();
 private:
     int health = 4;
+    void getMushroomImage();
 };
 
 class MushroomField: public QObject, QGraphicsPixmapItem{
@@ -27,6 +28,8 @@ public:
     MushroomField(int num_mushrooms, QGraphicsScene * myscene);
     std::vector<Mushroom *> mushroom_field;
     int binary_field[FULL_W/25][FULL_H/25] = {};
+    void drawField();
+    void nextMushroom();
 public slots:
     void dartCollision();
 private:

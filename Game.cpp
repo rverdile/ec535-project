@@ -10,6 +10,8 @@
 
 #include "QtDebug"
 
+//int num_mushrooms = 50;
+
 Game::Game(QWidget *parent)
 {
     showMainMenu();
@@ -209,7 +211,35 @@ void Game::start()
     score = new Score(scene);
     scene->addItem(score->scoreText);
 
+    // Create the play button
+    Button* nextLevel = new Button(QString("Change Mushrooms"));
+    int x = this->width()/2 - nextLevel->boundingRect().width()/2;
+    int y = 350;
+    nextLevel->setPos(x,y);
+    connect(nextLevel,SIGNAL(clicked()),this,SLOT(nextLevel()));
+    scene->addItem(nextLevel);
+
     show();
+}
+
+void Game::nextLevel()
+{
+
+    if (centipedes == nullptr)
+    {
+        delete centipedes;
+        centipedes = new Centipedes(scene, mushrooms);
+    }
+
+    if (mushrooms != nullptr)
+    {
+        for(size_t i = 0; i < mushrooms->mushroom_field.size(); i++)
+        {
+            scene->removeItem(mushrooms->mushroom_field[i]);
+        }
+      mushrooms->nextMushroom();
+      mushrooms->drawField();
+    }
 }
 
 

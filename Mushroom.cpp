@@ -8,9 +8,11 @@
 
 extern Game * game;
 
+int mush_id = 1;
+
 Mushroom::Mushroom()
 {
-    setPixmap(QPixmap(":/images/images/mushroom_4hp.png"));
+    getMushroomImage();
 }
 
 int Mushroom::getHealth()
@@ -24,13 +26,7 @@ bool Mushroom::decrementHealth()
 
     if(this->health > 0)
     {
-
-        if(health == 3)
-            setPixmap(QPixmap(":/images/images/mushroom_3hp.png"));
-        else if(health == 2)
-            setPixmap(QPixmap(":/images/images/mushroom_2hp.png"));
-        else if(health == 1)
-            setPixmap(QPixmap(":/images/images/mushroom_1hp.png"));
+        getMushroomImage();
         return false;
     }
     else
@@ -52,6 +48,69 @@ bool Mushroom::is_shot()
         }
     }
     return false;
+}
+
+void Mushroom::getMushroomImage()
+{
+    qDebug() << "here";
+
+    if(mush_id == 1)
+    {
+        if(health == 4)
+        {
+            setPixmap(QPixmap(":/images/images/purple_mush_4hp_25x25.png"));
+        }
+        else if(health == 3)
+        {
+            setPixmap(QPixmap(":/images/images/purple_mush_3hp_25x25.png"));
+        }
+        else if(health == 2)
+        {
+            setPixmap(QPixmap(":/images/images/purple_mush_2hp_25x25.png"));
+        }
+        else if(health == 1)
+        {
+            setPixmap(QPixmap(":/images/images/purple_mush_1hp_25x25.png"));
+        }
+    }
+    else if(mush_id == 2)
+    {
+        if(health == 4)
+        {
+            setPixmap(QPixmap(":/images/images/green_mush_4hp_25x25.png"));
+        }
+        else if(health == 3)
+        {
+            setPixmap(QPixmap(":/images/images/green_mush_3hp_25x25.png"));
+        }
+        else if(health == 2)
+        {
+            setPixmap(QPixmap(":/images/images/green_mush_2hp_25x25.png"));
+        }
+        else if(health == 1)
+        {
+            setPixmap(QPixmap(":/images/images/green_mush_1hp_25x25.png"));
+        }
+    }
+    else if(mush_id == 3)
+    {
+        if(health == 4)
+        {
+            setPixmap(QPixmap(":/images/images/red_mush_4hp_25x25.png"));
+        }
+        else if(health == 3)
+        {
+            setPixmap(QPixmap(":/images/images/red_mush_3hp_25x25.png"));
+        }
+        else if(health == 2)
+        {
+            setPixmap(QPixmap(":/images/images/red_mush_2hp_25x25.png"));
+        }
+        else if(health == 1)
+        {
+            setPixmap(QPixmap(":/images/images/red_mush_1hp_25x25.png"));
+        }
+    }
 }
 
 MushroomField::MushroomField(int num_mushrooms, QGraphicsScene * myscene)
@@ -104,5 +163,42 @@ void MushroomField::dartCollision()
                 binary_field[x][y] = 0;
             }
         }
+    }
+}
+
+void MushroomField::drawField()
+{
+    for(int i = 0; i < FIELD_W/25; i++)
+    {
+        for(int j = 0; j < FIELD_H/25; j++)
+        {
+            if(binary_field[i][j])
+            {
+                Mushroom * mushroom = new Mushroom();
+                mushroom->setPos(i*25,50+j*25);
+                mushroom_field.push_back(mushroom);
+
+            }
+        }
+    }
+
+    for(size_t i = 0; i < mushroom_field.size(); i++) {
+        myscene->addItem(mushroom_field[i]);
+    }
+}
+
+void MushroomField::nextMushroom()
+{
+    if(mush_id == 1)
+    {
+        mush_id = 2;
+    }
+    else if(mush_id == 2)
+    {
+        mush_id = 3;
+    }
+    else if(mush_id == 3)
+    {
+        mush_id = 1;
     }
 }

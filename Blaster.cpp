@@ -98,7 +98,7 @@ void Blaster::collisionCheck()
 void Blaster::checkScore()
 {
     //converted score: score - n*NEW_LIFE_SCORE, where n = interval
-    //(n=0:(0,12000), n=1:(12000,24000),...)
+    //(n=0:(0,12000), n=1:(12000,24000),...) where NEW_LIFE_SCORE = 12000
     long converted_score = (game->score->getScore()) - score_int_idx*NEW_LIFE_SCORE;
 
     if(converted_score > NEW_LIFE_SCORE)
