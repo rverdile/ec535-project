@@ -1,6 +1,6 @@
 # EC535 Project: Centipede
 
-Centipede is a classic, fixed shooter arcade game. The primary objective is to shoot all the segments of a centipede that navigates through a field of mushrooms towards the player. This project is version of Centipede coded for the BeagleBone Black and an LCD touchscreen. A USB keyboard is also required. 
+Centipede is a classic, fixed shooter arcade game. The primary objective is to shoot all the segments of a centipede that navigates through a field of mushrooms towards the player. This project a is version of Centipede coded for the BeagleBone Black and an LCD touchscreen. A USB keyboard is also required. 
 
 To build the project, copy all files from this repository to eng-grid. Be sure to run:
 
