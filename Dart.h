@@ -16,10 +16,10 @@ class Dart: public QObject, public QGraphicsPixmapItem{
 public:
     Dart();
 public slots: // member function that can be connected to a signal
-    void move();
+    void move(); // moves dart
 signals:
-    void collision();
-    void mushroomCollision();
+    void collision(); // handles centipede collision
+    void mushroomCollision(); // handles mushroom collision
 };
 
 #endif // DART_H
