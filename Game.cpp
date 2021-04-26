@@ -127,6 +127,16 @@ void Game::showGameEnd()
     title->setPos(36,115);
     scene->addItem(title);
 
+    // Show final score
+    int finalScore = score->getScore();
+    QGraphicsTextItem *scoreText = new QGraphicsTextItem("Score: " + QString::number(finalScore));
+    scoreText->setDefaultTextColor(Qt::white);
+    QFont titleFont("Helvetica",14);
+    titleFont.setBold(true);
+    scoreText->setFont(titleFont);
+    scoreText->setPos(SCENE_W/2 - scoreText->boundingRect().width()/2, 160);
+    scene->addItem(scoreText);
+
     // Create the Play Again button
     Button* playButton = new Button(QString("Play Again"));
     int x = SCENE_W/2 - playButton->boundingRect().width()/2;
