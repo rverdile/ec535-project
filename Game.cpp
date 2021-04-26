@@ -1,3 +1,10 @@
+/*
+ * EC535 Final Project - Centipede
+ * Game: Creates the menu screens and game
+ * components and handles logic for moving
+ * between levels and ending the game
+ */
+
 #include <QApplication>
 #include <QTimer>
 #include "Game.h"
@@ -12,13 +19,16 @@
 
 #include "QtDebug"
 
+// Constructor, displays main menu
 Game::Game(QWidget *parent)
 {
     showMainMenu();
 }
 
+// Create and show main menu
 void Game::showMainMenu()
 {
+    // Create the scene
     scene = new QGraphicsScene();
     scene->setSceneRect(0,0,SCENE_W,SCENE_H);
     setScene(scene);
@@ -44,14 +54,15 @@ void Game::showMainMenu()
     Button* howButton = new Button(QString("How to Play"));
     x = SCENE_W/2 - howButton->boundingRect().width()/2;
     y = 300;
-//    qDebug() << x << y;
     howButton->setPos(x,y);
     connect(howButton,SIGNAL(clicked()),this,SLOT(showHowToPlay()));
     scene->addItem(howButton);
 }
 
+// Show the "How to Play" screen
 void Game::showHowToPlay()
 {
+    // Create the scene
     scene = new QGraphicsScene();
     setScene(scene);
     scene->setSceneRect(0,0,SCENE_W,SCENE_H);
@@ -62,6 +73,7 @@ void Game::showHowToPlay()
     title->setPos(36,10);
     scene->addItem(title);
 
+    // Create the instruction text
     QTextBlockFormat format;
     format.setAlignment(Qt::AlignCenter);
     QString instr = QString("When the game begins, a centipede will spawn in at the top of screen and begin navigating down through a field of mushrooms. The object of the game is to eliminate "
@@ -85,8 +97,7 @@ void Game::showHowToPlay()
     instrText->setTextCursor(cursor);
     scene->addItem(instrText);
 
-
-    // Return to main menu
+    // Create Main Menu button
     Button* menuButton = new Button(QString("Main Menu"));
     x = SCENE_W/2 - menuButton->boundingRect().width()/2;
     y = 410;
@@ -95,16 +106,17 @@ void Game::showHowToPlay()
     scene->addItem(menuButton);
 }
 
+// Show "Game Over" screen
 void Game::showGameEnd()
 {
-    //qDebug() << "IN END";
-    // Stop timer
+    // Stop timers
     timer->stop();
     centipedes->stop();
 
-    // remove items
+    // Remove items
     this->removeItems();
 
+    // Create scene
     scene = new QGraphicsScene();
     setScene(scene);
     scene->setSceneRect(0,0,SCENE_W,SCENE_H);
@@ -115,7 +127,7 @@ void Game::showGameEnd()
     title->setPos(36,115);
     scene->addItem(title);
 
-    // Create the play button
+    // Create the Play Again button
     Button* playButton = new Button(QString("Play Again"));
     int x = SCENE_W/2 - playButton->boundingRect().width()/2;
     int y = 225;
@@ -123,7 +135,7 @@ void Game::showGameEnd()
     connect(playButton,SIGNAL(clicked()),this,SLOT(start()));
     scene->addItem(playButton);
 
-    // Create the Exit button
+    // Create the Main Menu button
     Button* exitButton = new Button(QString("Main Menu"));
     x = SCENE_W/2 - exitButton->boundingRect().width()/2;
     y = 300;
@@ -150,6 +162,7 @@ Game::~Game()
 //        delete mushrooms;
 }
 
+// Delete game related items
 void Game::removeItems()
 {
     if (centipedes != nullptr)
@@ -162,6 +175,7 @@ void Game::removeItems()
         delete mushrooms;
 }
 
+// Start game
 void Game::start()
 {
     // Set up scene
@@ -192,7 +206,7 @@ void Game::start()
     score = new Score(scene);
     scene->addItem(score->scoreText);
 
-    // check if centipede is killed
+    // Set up timer for checking if all centipedes are gone
     timer = new QTimer(); // every time it goes to 0, signal will execute
     connect(timer,SIGNAL(timeout()),this,SLOT(nextLevel()));
     timer->start(20); // 20ms
@@ -200,8 +214,11 @@ void Game::start()
     show();
 }
 
+// Check if all centipedes have been defeated
+// If so, move to the next level
 void Game::nextLevel()
 {
+    // Check if there are any centipede segments left in the scene
     bool flag = true;
     QList<QGraphicsItem *> items = scene->items();
     for (int i = 0; i < (int)items.size(); i++) {
@@ -211,11 +228,14 @@ void Game::nextLevel()
         }
     }
 
+    // If the there are no centipedes left, move to the next level
     if (centipedes->getCentipedesSize() == 0 || flag)
     {
+        // Create a new centipede
         delete centipedes;
         centipedes = new Centipedes(scene, mushrooms);
 
+        // Create new mushrooms, adding 5 to total
         if (mushrooms != nullptr)
         {
             int n = (int)mushrooms->mushroom_field.size();

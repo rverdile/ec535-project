@@ -1,3 +1,9 @@
+/*
+ * EC535 Final Project - Centipede
+ * Centipede: Draws, moves, and controls the
+ * centipede enemies
+ */
+
 #include "Centipede.h"
 #include "Mushroom.h"
 #include "Dart.h"
@@ -14,13 +20,14 @@ extern Game * game;
 //          Centipede Definitions
 //-------------------------------------------
 
-int counter = 0;
 // Constructor
 // Create a centipede and start movement timer
 Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomField *mushroom_field)
 {
+    // Connect game ending signals
     QObject::connect(this, &Centipede::endGame_OffScreen, game, &Game::showGameEnd);
 
+    // Save variables
     this->mushroom_field = mushroom_field;
     this->speed = speed;
 
@@ -29,6 +36,7 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomF
     this->direction = direction;
     for (int i = 0; i < length; i++) {
 
+        // Based on segment, set as head or body image
         Centipede_Segment *segment;
         if (i == length - 1)
            segment = new Centipede_Segment(false, direction);
@@ -39,9 +47,11 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomF
         if (direction)
             segment->setPos(x+16*i,y);
         else
-            segment->setPos(x-16    *i,y);
+            segment->setPos(x-16*i,y);
 
+        // All segments initially move right
         segment->state = 0;
+
         segments.push_back(segment);
     }
 
@@ -53,12 +63,15 @@ Centipede::Centipede(int len, int x, int y, int speed, bool direction, MushroomF
     timer->start(speed);
 }
 
+// Constructor
+// Only creates mushroom field and sets game ending signal
 Centipede::Centipede(MushroomField *mushroom_field)
 {
     this->mushroom_field = mushroom_field;
     QObject::connect(this, &Centipede::endGame_OffScreen, game, &Game::showGameEnd);
 }
 
+// Destructor
 Centipede::~Centipede()
 {
     for (int i = length - 1; i >= 0; i--) {
@@ -73,8 +86,10 @@ void Centipede::addToScene(QGraphicsScene * scene) {
     }
 }
 
+// Start a centipede's movement with certain speed
 void Centipede::start(int speed)
 {
+    // Don't let centipede go faster than 70 ms
     if (speed < 70)
         speed = 70;
 
@@ -86,18 +101,22 @@ void Centipede::start(int speed)
     timer->start(speed);
 
     this->speed = speed;
-//    qDebug() << "Speed: " << speed;
 }
 
+// Change the speed of a centipede
 void Centipede::update_speed(int speed)
 {
+    // Don't let centipede go faster than 70 ms
     if (speed < 70)
         speed = 70;
+
+    // Update timer
     timer->setInterval(speed);
     this->speed = speed;
-//    qDebug() << "Speed: " << speed;
 }
 
+// Check if the centipede has reached the bottom of
+// the screen
 bool Centipede::is_Gone()
 {
     int x = segments[length-1]->x();
@@ -105,13 +124,11 @@ bool Centipede::is_Gone()
 
     if (y == FULL_H) {
         if (x == 0 || x >= SCENE_W - 25) {
-//            qDebug() << "Centipede is gone";
             return true;
         }
     }
     return false;
 }
-
 
 // Move the centipede
 void Centipede::move()
@@ -120,24 +137,25 @@ void Centipede::move()
 
     // Check if centipede has reached bottom of screen
     if (is_Gone()) {
+
+        // If it has, end the game
         emit endGame_OffScreen();
         return;
     }
 
     // Check if head is about to hit mushroom
     if (mushroom_collision(segments[length-1])) {
-//        qDebug() << counter<<": Collision";
-        counter++;
         turn_around = true;
     }
 
+    // Move each segment of the centipede
     for (int i = 0; i < length; i++) {
         Centipede_Segment *segment = segments[i];
 
         // Moving right
         if (segment->state==0) {
 
-            // If it's not the head, move it irght
+            // If it's not the head, move it right
             if (i != length - 1) {
                  segment->setPos(segment->x()+16, segment->y());
             }
@@ -168,7 +186,7 @@ void Centipede::move()
             segment->setPos(segment->x(), segment->y()+16);
             segment->state = 2;
 
-            // Set next next segment to turn state
+            // Set next segment to turn state
             if (i != 0)
                 segments[i-1]->state = 1;
 
@@ -233,7 +251,7 @@ Centipede_Segment::Centipede_Segment(bool section, bool direction)
 }
 
 
-// Returns true if the current segment was shot
+// Returns true if the current segment was shot by dart
 bool Centipede_Segment::is_shot()
 {
     QList<QGraphicsItem *> colliding_items = collidingItems();
@@ -248,6 +266,7 @@ bool Centipede_Segment::is_shot()
 // Returns true if segment is about to hit a mushroom
 bool Centipede::mushroom_collision(Centipede_Segment *segment)
 {
+    // Calculate position in mushroom binary field
     int x = segment->x();
     int y = segment->y();
 
@@ -259,8 +278,8 @@ bool Centipede::mushroom_collision(Centipede_Segment *segment)
     x /= 16;
     y /= 16;
 
+    // Return true if about to collide with mushroom
     if (mushroom_field->binary_field[x][y - 2]) {
-//        qDebug() << "Collision" << x << y-2;
         return true;
     }
 
@@ -296,12 +315,13 @@ Centipedes::Centipedes(QGraphicsScene *scene, MushroomField *mushroom_field)
     this->scene = scene;
 }
 
+// Returns the number of active centipedes
 int Centipedes::getCentipedesSize()
 {
     return centipedes.size();
 }
 
-
+// Destructor
 Centipedes::~Centipedes()
 {
     int length = centipedes.size();
@@ -310,6 +330,8 @@ Centipedes::~Centipedes()
     }
 }
 
+// Stop all centipedes by stopping their movement
+// timers and removing them from the centipedes vector
 void Centipedes::stop()
 {
     int n = (int)centipedes.size();
@@ -327,7 +349,11 @@ void Centipedes::collision_check()
     std::vector<int> deleting;
     int del_num = -1;
     Centipede *del = nullptr;
+
+    // Loop through all centipedes
     for (int i = 0; i < int(centipedes.size()); i++) {
+
+        // Loop through all segments
         for (int j = 0; j < int(centipedes[i]->segments.size()); j++) {
 
             // Handle collision with dart
@@ -339,6 +365,7 @@ void Centipedes::collision_check()
                 int x = centipedes[i]->segments[j]->x();
                 int y = centipedes[i]->segments[j]->y();
 
+                // Create mushroom where shot segment was
                 Mushroom * mushroom = new Mushroom();
                 mushroom->setPos(x,y);
                 mushroom_field->mushroom_field.push_back(mushroom);
@@ -379,7 +406,7 @@ void Centipedes::collision_check()
                 else {
                     game->score->tailIncrease();
 
-                    // Create new centipedes
+                    // Create first new centipede
                     Centipede *new_cent = new Centipede(mushroom_field);
                     for (int k = 0; k < j; k++)
                         new_cent->segments.push_back(centipedes[i]->segments[k]);
@@ -392,6 +419,7 @@ void Centipedes::collision_check()
                     new_cent->segments[new_cent->length - 1]->set_head(new_cent->direction);
                     centipedes.push_back(new_cent);
 
+                    // Create second new centipede
                     new_cent = new Centipede(mushroom_field);
                     for (int k = j + 1; k < length; k++)
                         new_cent->segments.push_back(centipedes[i]->segments[k]);
@@ -403,6 +431,7 @@ void Centipedes::collision_check()
                     new_cent->start(centipedes[i]->speed - 20);
                     centipedes.push_back(new_cent);
 
+                    // Set old centipede for deltion
                     del = centipedes[i];
                     scene->removeItem(centipedes[i]->segments[j]);
                     del_num = i;

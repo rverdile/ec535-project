@@ -1,3 +1,9 @@
+/*
+ * EC535 Final Project - Centipede
+ * Centipede: Draws, moves, and controls the
+ * centipede enemies
+ */
+
 #ifndef CENTIPEDE_H
 #define CENTIPEDE_H
 

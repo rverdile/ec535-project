@@ -1,3 +1,9 @@
+/*
+ * EC535 Final Project - Centipede
+ * Button: Create buttons for use on
+ * menu pages
+ */
+
 #ifndef BUTTON_H
 #define BUTTON_H
 

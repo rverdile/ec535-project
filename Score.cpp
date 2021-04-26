@@ -1,9 +1,15 @@
+/*
+ * EC535 Final Project - Centipede
+ * Score: Updates and displays current score
+ */
+
 #include <QFont>
 #include "Score.h"
 #include "Bauhaus.h"
 
 #include <QDebug>
 
+// Constructor, draws current score
 Score::Score(QGraphicsScene *scene){
     score = 0;
 
@@ -18,11 +24,13 @@ Score::Score(QGraphicsScene *scene){
     scene->addItem(scoreLabel);
 }
 
+// Score accessor
 long Score::getScore()
 {
     return this->score;
 }
 
+// Add ten points when centipede body segment shot
 void Score::tailIncrease()
 {
     score += 10;
@@ -32,6 +40,7 @@ void Score::tailIncrease()
     scene->addItem(scoreText);
 }
 
+// Add 100 points when centipede head shot
 void Score::headIncrease()
 {
     score += 100;
@@ -41,6 +50,7 @@ void Score::headIncrease()
     scene->addItem(scoreText);
 }
 
+// Add 1 point when mushroom shot
 void Score::mushIncrease()
 {
     score += 1;
@@ -50,6 +60,7 @@ void Score::mushIncrease()
     scene->addItem(scoreText);
 }
 
+// Format score text
 void Score::formatText()
 {
     scoreText->setDefaultTextColor(Qt::white);

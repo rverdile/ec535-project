@@ -1,3 +1,9 @@
+/*
+ * EC535 Final Project - Centipede
+ * Dart: Draws, moves, and handles collisions for
+ * the dart that the player shoots at the centipedes
+ */
+
 #ifndef DART_H
 #define DART_H
 

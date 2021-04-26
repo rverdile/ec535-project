@@ -1,3 +1,10 @@
+/*
+ * EC535 Final Project - Centipede
+ * Blaster: Display and control blaster that
+ * the user uses to shoot centipedes and mushrooms
+ */
+
+
 #ifndef BLASTER_H
 #define BLASTER_H
 

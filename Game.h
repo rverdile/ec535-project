@@ -1,3 +1,10 @@
+/*
+ * EC535 Final Project - Centipede
+ * Game: Creates the menu screens and game
+ * components and handles logic for moving
+ * between levels and ending the game
+ */
+
 #ifndef GAME_H
 #define GAME_H
 

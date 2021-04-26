@@ -1,3 +1,9 @@
+/*
+ * EC535 Final Project - Centipede
+ * Mushroom: Creates and controls mushroom
+ * field that the centipede navigates through
+ */
+
 #ifndef MUSHROOM_H
 #define MUSHROOM_H
 

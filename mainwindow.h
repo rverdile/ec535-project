@@ -1,3 +1,9 @@
+/*
+ * EC535 Final Project - Centipede
+ * Main Window: Creates the game
+ * window and rotates it for touchscreen
+ */
+
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
