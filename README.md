@@ -15,7 +15,7 @@ qmake
 make
 ```
 
-This will make an executable named Centipede. Copy this file to the root folder of your rootfs and rebuild the SD card image. Flash the SD card with the updated image. Before starting up the BeagleBone, make sure you have plugged in USB keyboard. Power on the BeagleBone and log in. To start the game, run:
+This will make an executable named Centipede. Copy this file to the root folder of your rootfs and rebuild the SD card image. Flash the SD card with the updated image. Before starting up the BeagleBone, make sure you have plugged in a USB keyboard. Power on the BeagleBone and log in. To start the game, run:
 
 ```
 ./Centipede
