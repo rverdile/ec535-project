@@ -16,6 +16,8 @@
 
 extern Game * game;
 
+// Constructor
+// Create blaster, number of lives text, and timers to check collision and score
 Blaster::Blaster(Centipedes * centipedes, MushroomField * mushroom_field, QGraphicsScene * myscene)
 {
     // Set variables

@@ -22,26 +22,26 @@ public:
     Mushroom(); // single mushroom object
     int getHealth(); // return current health of mushroom
     bool decrementHealth(); // decrease health by 1
-    bool is_shot();
+    bool is_shot(); // true of mushroom collides with dart
 private:
-    int health = 4;
-    void getMushroomImage();
+    int health = 4; // mushroom health points
+    void getMushroomImage(); // draws mushroom image to screen
 };
 
 class MushroomField: public QObject, QGraphicsPixmapItem{
     Q_OBJECT
 public:
     MushroomField(int num_mushrooms, QGraphicsScene * myscene);
-    std::vector<Mushroom *> mushroom_field;
-    int binary_field[FULL_W/16][FULL_H/16] = {};
-    void drawField();
-    void addMushrooms(int num);
-    void nextMushroom();
+    std::vector<Mushroom *> mushroom_field; // vector of mushrooms in field
+    int binary_field[FULL_W/16][FULL_H/16] = {}; // locations of mushrooms represented with 1's
+    void drawField(); // place mushrooms on screen based on binary field matrix
+    void addMushrooms(int num); // add num mushrooms to field
+    void nextMushroom(); // switches between purple, green, red mushrooms
 public slots:
-    void dartCollision();
+    void dartCollision(); // handles dart collision with mushroom
 private:
-    int num_mushrooms;
-    QGraphicsScene * myscene;
+    int num_mushrooms; // number of mushrooms in mushroom field on creation
+    QGraphicsScene * myscene; // pointer to main game scene
 };
 
 #endif // MUSHROOM_H

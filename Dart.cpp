@@ -27,7 +27,7 @@ Dart::Dart()
     // Connect timeout() function of timer to move slot of dart
     connect(timer,SIGNAL(timeout()),this,SLOT(move()));
 
-    timer->start(20); // 20ms
+    timer->start(20); // 20ms - reflects speed of dart
 }
 
 void Dart::move()
